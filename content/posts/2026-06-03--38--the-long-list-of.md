@@ -105,6 +105,6 @@ The initial page load takes around 4.5 seconds, but the updates are instant (edi
 
 I've deployed some instances but I haven't officially launched yet. I'm going to ask some friends if they'd like to test out the service ✨ for free ✨. Maybe I can get them hooked on it and turn them into clients. If one of them converts I'll be super happy.
 
-If you'd like to try it out reach out to me via the email in my [github profile](https://github.com/gonzo-beans).
+If you'd like to try it out reach out to me via the email in my [github profile](https://github.com/gonzo-beanz).
 
 The next couple of months will be the tedious dance of user testing, tweaks, and marketing. The nerd in me dreads the marketing but I've matured enough to understand how the world works. I'm no longer illusioned with the idea I'll get throngs of people begging to give me money just because I built something I think is cool. A boy can dream though.

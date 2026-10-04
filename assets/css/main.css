@@ -134,10 +134,6 @@ h1 {
     text-align: center;
 }
 
-h3 {
-    margin-top:;
-}
-
 .site {
     font-size: 17px;
     width: 90%;
@@ -223,6 +219,21 @@ blockquote {
     margin: 24px 0;
     border: 1px solid #ddd;
     padding: 0px 1em;
+}
+
+#home .bio {
+    display: flex;
+    margin-top: 2rem;
+}
+
+#home .bio img {
+    width: min(200px, 25vw);
+    height: min(200px, 25vw);
+    margin-right: 2rem;
+}
+
+#home .logo-container {
+    margin-top: 5rem;
 }
 
 .posts {
@@ -433,6 +444,7 @@ video {
 }
 
 .post details.pikchr pre {
+    margin-top: 1rem;
     text-align: left;
 }
 

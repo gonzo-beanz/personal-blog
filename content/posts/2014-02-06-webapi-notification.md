@@ -79,4 +79,4 @@ Notification.requestPermission(function( permission ) {
 });
 ```
 
-You can find the source code for the app [here](https://github.com/gonzo-beans/NakedFerret.github.io/tree/master/demos/04).
+You can find the source code for the app [here](https://github.com/gonzo-beanz/NakedFerret.github.io/tree/master/demos/04).

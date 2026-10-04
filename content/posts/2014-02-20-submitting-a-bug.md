@@ -19,7 +19,7 @@ I unchecked the "Remember my choice" option, pressed "Deny", and nothing happene
 
 Now, I needed to create discrete steps the Firefox OS developers could take to reproduce the bug. What I described above is pretty good, but it could be more concise and clearer.
 
-First of all, the app that I was testing contained 300 lines of javascript and had some semi complex UI interaction. The developers should not have to search through all of that to find the single line that causes the bug. I created a much smaller application ([source here](https://github.com/gonzo-beans/NakedFerret.github.io/tree/master/demos/13)) that the developers could test. 
+First of all, the app that I was testing contained 300 lines of javascript and had some semi complex UI interaction. The developers should not have to search through all of that to find the single line that causes the bug. I created a much smaller application ([source here](https://github.com/gonzo-beanz/NakedFerret.github.io/tree/master/demos/13)) that the developers could test. 
 
 Then, I created the following steps to reproduce the bug
 
