@@ -221,6 +221,10 @@ blockquote {
     padding: 0px 1em;
 }
 
+#home .title {
+    line-height: 1;
+}
+
 #home .bio {
     display: flex;
     margin-top: 2rem;
@@ -230,6 +234,10 @@ blockquote {
     width: min(200px, 25vw);
     height: min(200px, 25vw);
     margin-right: 2rem;
+}
+
+#home .product-announcement {
+    margin-top: 3rem;
 }
 
 #home .logo-container {
@@ -374,13 +382,13 @@ blockquote {
     }
 }
 
-.post ul,
-.post ol {
+ul,
+ol {
     margin-left: 1.35em;
     margin-bottom: 1rem;
 }
 
-.post li {
+li {
     margin-bottom: 0.5em;
 }
 
