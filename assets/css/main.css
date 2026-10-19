@@ -130,16 +130,12 @@ a:visited {
 
 /* SITE */
 
-h1 {
-    text-align: center;
-}
-
 .site {
     font-size: 17px;
     width: 90%;
     max-width: 80rem;
     margin: 3em auto 2em;
-    line-height: 1.25rem;
+    line-height: 1.15;
     position: relative;
 }
 
