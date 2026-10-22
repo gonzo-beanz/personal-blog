@@ -1,5 +1,5 @@
 ---
-date: '2026-10-18T00:00:00-00:00'
+date: '2026-10-22T00:00:00-00:00'
 url: /blog/42
 title: "Mathematicians and Programmers will still exists. You just won't have that job."
 ---
@@ -27,20 +27,18 @@ I believe that both points are largely true. I can't speak for the craft of math
 Just to be clear: *programming* is the writing of executable programs. Coding. In a swift time-span of 2 years the AI models have went from 
 
 1. A semi-helpful chat bot I could copy and paste to and from. A whole separate app. 
-1. A `claude`/`codex` program that can read my project's code or [decode inscrutable error messages](https://gist.github.com/travislbrundage/928a8f7cf6ce49b80e722cbc8899395d). It was now living in my code editor.
-1. A bona fide **agent** that I can give it a high-level goal and it can reliably produce a working solution. I don't even open a text editor nowadays.
+1. A `claude`/`codex` program that can read my project's code or [decode inscrutable error messages](https://gist.github.com/travislbrundage/928a8f7cf6ce49b80e722cbc8899395d). It was then living in my code editor.
+1. A bona fide **agent** that I can give it a high-level goal and it can very reliably produce a working solution. I don't even open a text editor nowadays.
 
-The crux of the employability issue is in the **working solution**. When we were oblivisouly enjoying the 2nd phase, there would be ~~frustating~~ playful exchange of *"It's not working in X"* or *"You said you fixed it but it's still broken"*.
+The crux of the employability issue is in the *working solution*. It completely changes the dynamic we've had for more than 50 years: to make an executable program you HAD to go employ a programmer.
 
-From a manager's perspective the programmers job in the second phase was clear: the baby sitter. 
+From a manager's perspective the programmers job in the second phase was clear: the baby sitter. The manager understood that `claude`/`codex` was doing most of the "work". They weren't even mad about it. They were able to close a job posting for the junior role since the baby sitter and `claude`/`codex` took care of the unglamorous work that's usually ignored and instead shoved onto the junior as "learning opportunities": fixing small design discrepancies, chasing down rare issues that were hard to reproduce, updating dependencies, etc.
 
-The manager understood that `claude` was doing most of the "work". They probably weren't even mad about it. Just last week they closed the job posting for the junior role. The baby sitter and `claude` had fixed small bugs that sat in the back of the work queue for 6 months.
+In the 3rd phase, I'm not even sitting on that baby. It just prints and prints and print and prints *working* programs faster than I ever could. **On a really productive day I might have written 300 lines of code. An agent can do that in 3 minutes**. 
 
-In the 3rd phase, I'm not even sitting on that baby. It just prints and prints **working** programs faster than I ever could. On a really productive day I might have written 300 lines of code. An agent can do that in **3 minutes**. 
+The thought has crossed the manager's mind. More than once a day probably. *The programmer is not needed anymore*. That same cost-trimming budget optimization axe that struck the junior's job posting last week was used at the "Senior Software Engineer" job posting today. I'm not great at math but even I can count 1-2-3. 
 
-The thought has crossed the manager's mind. More than once a day probably. *I don't need to be here anymore*. That same cost-trimming budget optimization axe that struck the junior's job posting was aimed at the "Senior Software Engineer" job posting today. I'm not great at math but even I can count 1-2-3. 
-
-This didn't really happen to me but it's a scenario that's playing out throughout the industry. 
+To be clear, this didn't happen to me but it's a scenario that's playing out throughout the industry. 
 
 From a business perspective, it seems like a no-brainer. It's MUCH cheaper to have the AI produce the code. After all, it. just. works. 
 
@@ -57,7 +55,7 @@ B: [
   text at 1mm right of Produces "produces" ljust
 ]
 
-text at 1cm above B.n "Before" big
+text at 1cm above B.n "The status quo" big "for the past 50 years" big
 
 dot invisible at 5cm right of B.n
 
@@ -72,9 +70,53 @@ A: [
   text at 1mm right of Produces "produces" ljust
 ]
 
-text at 1cm above A.n "After" big
+text at 1cm above A.n "Today" big
 ```
 
 The gotcha here is of course that programmers do more than just write programs. In much the same way that mathematician's do more than "convert coffee to theorems".
 
-## The essence of the programmer's job
+## The essence of the programmer, the baker, the plumber, the dry-cleaner
+
+Much better writers have broached the subject before me. See [*"Do You Still Read the Code?"*](https://zanlib.dev/blog/do-you-still-read-the-code/) by Marek Chotoborski and an even earlier work from 1984 by Peter Naur [*Programming as Theory Building*](https://gwern.net/doc/cs/algorithm/1985-naur.pdf).
+
+I will take a more illustrative approach.
+
+I've already mentioned that to make an executable program you needed a programmer before. As such, it's easy to assume that's their _only_ role. This is a fallacy. The executable program is merely an asset that's created. It is not what makes a programmer valuable. Their experience, skills, and context is what makes the programmer valueable.
+
+Consider other carreers. 
+
+Is the baker revered because they made good bread? No. The bread is the asset they created. The value of the baker is their bakery and their process. Today's bread is made using the dough mixed yesterday. It's given a day to proof and rise. This is a *logistical nightmare*. How much dough do we need? A bakery sells not one type of bread but up to a dozen, and other baked goods. Each one cooks at a different amount of time. To meet the rush of customers at different times of the day, what is the order of baking and when?
+
+Is a plumber valueable because they laid pipes in new construction as the build plans dictated? No. A plumber is valueable when they can walk into an 80 year old home, diagnose the cause of a leak, the source of the smell of sewage, the low water pressure, etc. It doesn't matter who built it and whether they used copper pipes, lead pipes, cast iron, plastic, or an unholy amalgamation. The plumber can envision the trade-offs, make all those tiny decisions, and propose a solution in a tidy bill.
+
+Is the dry-cleaner sought after because they just press shirts. Well actually yes. But to truly succeed a dry-cleaner needs to tailor and tackle stains besides just a cleaning that freshens a realtively clean garment. There are different types of fabrics: poliester, cotton, linen, lycra. There are also different types of messes like coffee, blood, sweat, glue, jam. Each combination calls for a different set of chemical treatment. Tailoring is a whole craft, where you have to understand different stiching patterns, materials, and understand how to mend so a new garment fits snug and an old garment fits changing bodies.
+
+Programmers are not unique. Like the baker, they understand some data has to be pre-processed to be instantly served on demand. A youtube video is uploaded as one file but becomes available to users in many different resolutions, with auto-generated captions in multiple languages. Like the plumber, they understand that there's dozens of programming languages, hundreds of frameworks, and thousands of libraries. They see the problem space and craftily choose a set of these to start a project or augment it. Like the dry-cleaner, they understand that there isn't just one device for the user but many. Is it a phone, a tablet, a little of both, will it fold, is it a laptop, a desktop, on linux, mac or windows?
+
+## Has your AI ever told you no?
+
+Today, AIs are wonderfully goal-oriented. This science-fiction levels of agency leads people to attribute autonomy as a characteristic. This is also wrong. 
+
+A key part of autonomy is building your own perspective, your own theory and defending it when it matters. It's very difficult nowadays to provide enough context to an AI system to be able to do that effectively. I believe it will continue to be a significant problem for at least 10 more years. 
+
+We do not like to be told no, but it's necessary. No beautiful snowflake idea ever survives the gritty reality of the real world. Our intentions are seldom aligned with the different grating compounding factors of our messy interconnected world.
+
+> **Customer:** I'm sick of being cold in the winter and hot in the summers. I want to add insulation to my house. Let's add outdoor insulation instead of indoor insulation. This way we avoid encroaching on the limited and valueable internal space
+>
+> **AI:** Great choice. Tell me the outdoor surface area to cover and your budget is. I'll search materials with the highest R-value that matches the budget to maximize the insulation!
+>
+> **Builder:** I highly recommend indoor insulation instead. From my inspection, your house has had humidity problems before. Outdoor insulation tends to not be breatheable, specially the materials with higher R-value. All outdoor material eventually wears out. Once water seeps in, outdoor insulation essentially forces the humidity inside. The house cannot breath out the humidity. You will have mold problems and the solution will be expensive repairs on the outside or...switching to indoor insulation.
+
+Note: I'm a programmer, I don't build houses. This is a hypothetical scenario.
+
+The essence of the programmer's work is to take the business's goals and requirements, the intended user experience, the performance budget, the time budget, and the budget budget into consideration and make the technological choices. It is to build that context, make the executable programs, and deploy it. Test it and check assumptions from all the stakeholders. Understand how each part of the program matches to the real world and matches to the design considerations. Then use that understanding to destroy, mend, or create anew when our naive assumptions inevitable crumble under the entropy of the real world.
+
+## So...our jobs are safe?
+
+Are programmers' job safe? **Nope**. Well...not the nice cushy roles that we are used to.
+
+The last 20 golden-age years of Venture Capitalist fueled salaries is probably gone for good.
+
+The vast majority of businesses have no clue what they're doing. They're adulting as hard as we are. Most need to execute faster, iterate, measure, and pivot. A cheap and quickly executing AI is exactly what they need. 
+
+Established businesses will still need programmers. A multi-million dollar company doesn't need to innovate as much as it needs to keep the lights on, be reliable, and maintain their customers trust. They want an expert to make the right choices along those axis. If they instead chose to cost-cut with AIs driven by middle managers, that's their grave to dig.
