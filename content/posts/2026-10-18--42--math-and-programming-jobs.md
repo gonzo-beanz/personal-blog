@@ -1,5 +1,5 @@
 ---
-date: '2026-10-22T00:00:00-00:00'
+date: '2026-10-25T00:00:00-00:00'
 url: /blog/42
 title: "Mathematicians and Programmers will still exist. You just won't have that job."
 ---
@@ -10,13 +10,13 @@ It won't take much digging to find negative sentiments about this. Grant Sanders
 
 > <b>@alvih333</b>
 > 
-> I feel like the point is still being missed, and it's very similar to the way software engineers are trying to cope. The argument you are making "Well yes now this part of math we will not need to do again, but now we can do this instead" however the issue with most people just don't want to do that...
+> I feel like the point is still being missed [...]. The argument you are making "Well yes now this part of math we will not need to do again, but now we can do this instead" however the issue with most people just don't want to do that...
 >
 > Like who are we kidding, the type of nerds who were attracted to math and software were into it because we saw it as an art-form, it was a craft, it was being the only one in your city to be able to solve a complicated math problem, it was immortalizing yourself because you discovered a proof and added to the ever expanding human knowledge.
 >
-> Imagine a leather workman who's life passion is making insanely high quality handbags,  who takes joy in knowing everything he touches will last someone a lifetime and give them joy everytime they use it. And then not gradually, but almost overnight someone comes to his door and tells him we can make bags 50 times better than you at 1/tenth the price. But don't you worry, you can make more money overseeing the factory, or selling people on how good this bag is, and explaining that to them.
-> 
-> I mean, ok, that just is not what I wanted to do with my life. I never wanted to be a manager, I never wanted to be a salesman, I never wanted to be a writer. A craft I enjoy doing has been taken away from me, I should be allowed to mourn, I don't care that I can do something else since I never liked doing it in the first place. I enjoyed solving problems and writing code, I don't care if people say "well thats never what programming was about it was actually about becoming a manager all along" I never wanted to be a manager, I never wanted to manage, I never wanted to be a proof reader.
+> [...]
+>
+> A craft I enjoy doing has been taken away from me, I should be allowed to mourn, I don't care that I can do something else since I never liked doing it in the first place. I enjoyed solving problems and writing code, I don't care if people say "well thats never what programming was about it was actually about becoming a manager all along" I never wanted to be a manager, I never wanted to manage, I never wanted to be a proof reader.
 > 
 > I just hate this existence.
 
@@ -91,9 +91,9 @@ From a business perspective, it seems like a no-brainer. It's MUCH cheaper to ha
 
 The gotcha here is of course that programmers do more than just write programs. In much the same way that mathematicians do more than "convert coffee to theorems".
 
-## The essence of the programmer, the baker, the plumber, the dry-cleaner
+## The essence of the programmer, the baker, the plumber
 
-Much better writers have broached the subject before me. See [*"Do You Still Read the Code?"*](https://zanlib.dev/blog/do-you-still-read-the-code/) by Marek Chotoborski and an even earlier work from 1984 by Peter Naur [*Programming as Theory Building*](https://gwern.net/doc/cs/algorithm/1985-naur.pdf).
+Much better writers have broached the subject before me. See the blog post [*"Do You Still Read the Code?"*](https://zanlib.dev/blog/do-you-still-read-the-code/) by Marek Chotoborski or the 10-page article from 1984 by Peter Naur [*Programming as Theory Building*](https://gwern.net/doc/cs/algorithm/1985-naur.pdf).
 
 I will take a more illustrative approach.
 
@@ -105,15 +105,11 @@ Is the baker revered because they made good bread? No. The bread is the asset th
 
 Is a plumber valueable because they laid pipes in new construction as the build plans dictated? No. A plumber is valueable when they can walk into an 80 year old home, diagnose the cause of a leak, the source of the smell of sewage, the low water pressure, etc. It doesn't matter who built it and whether they used copper pipes, lead pipes, cast iron, plastic, or an unholy amalgamation. The plumber can envision the trade-offs, make all those tiny decisions, and propose a solution in a tidy bill.
 
-Is the dry-cleaner sought after because they just press shirts. Well...probably yes. Most of the time they are cleaning a relatively clean garment. But to truly succeed a dry-cleaner needs to tailor and tackle stains as well. There are different types of fabrics: polyester, cotton, linen, lycra. There are different types of messes like coffee, glue, blood, sweat, jam. Each combination calls for a different chemical treatment. Tailoring is a whole craft, where you have to understand different stiching patterns, materials, and understand how to mend so a new garment fits snug and an old garment fits changing bodies.
-
 Programmers are not unique. They face the same types of problems.
 
 Like the baker, they understand some data has to be pre-processed to be instantly served on demand. A youtube video is uploaded as one file but becomes available to users in many different resolutions, with auto-generated captions in multiple languages. 
 
 Like the plumber, they understand that there's dozens of programming languages, hundreds of frameworks, and thousands of libraries. They see the problem space and craftily choose a set of these to start a project or augment it. 
-
-Like the dry-cleaner, they understand that there isn't just one device for the user but many. Is it a phone, a tablet, a little of both, will it fold, is it a laptop, a desktop, on linux, mac or windows? Each device calls for a different experience to fit.  
 
 ## Has your AI ever told you no?
 
@@ -131,10 +127,17 @@ We do not like to be told no, but it's necessary. No beautiful snowflake idea ev
 
 Note: I'm a programmer, I don't build houses. This is a hypothetical scenario.
 
-
 The essence of the programmer's work is to take the business's goals and requirements, the intended user experience, the performance budget, the time budget, and the *budget* budget into consideration and make the technological choices. It is to build that context, make the executable programs, and deploy it. Test it live and check assumptions from all these stakeholders. Understand how each part of the program matches to the real world and matches to the design considerations. Then use that understanding to destroy, mend, or create anew when our naive assumptions inevitable crumble under the entropy of the real world.
 
-If you are unconvinced, I *highly* recommend reading [*Programming as Theory Building*](https://gwern.net/doc/cs/algorithm/1985-naur.pdf) by Peter Naur. It's still incredibly relevant despite the fact it was published in 1984.
+Programmers are most valuable when they tell their leaders **"No"**. To surround yourself with sycophantic souless yes-machines is to enable the limitless potential of your lack of experience and intuition. 
+
+The programmer is paid not to write programs specifically but to create the "theory" of the program. This theory is abstract, like a thought that we can never put into words quite right. It's both useless by itself and indispensable to the programmer. The theory guides the creation of the program as it gets closer and closer to the ideal solution as we better understand the problem we are trying to solve.  
+
+The programmer should understand the world as it relates to the problem at hand, and point to the part of the code that wrangles with that reality.
+
+The programmer's value is apparent when our perspective on the world changes. The problem definition updates, the business pivots, and the programmer with a solid theory can start making a list of the changes that are needed.
+
+If you are unconvinced, I *highly* recommend reading [*Programming as Theory Building*](https://gwern.net/doc/cs/algorithm/1985-naur.pdf) by Peter Naur. It's on 10 pages long and still incredibly relevant despite the fact it was published in 1984.
 
 ## So...our jobs are safe?
 
@@ -145,3 +148,6 @@ The last 20 golden-age years of venture capitalist fueled salaries is probably g
 The vast majority of businesses have no clue what they're doing. They're adulting as hard as we are. Most need to execute faster, iterate, measure, and pivot. A cheap and quickly executing AI is exactly what they need. 
 
 Established businesses will still need programmers. A multi-million dollar company doesn't need to innovate as much as it needs to keep the lights on, be reliable, and maintain their customers trust. They want an expert to make the right choices along those axes. If they instead chose to cost-cut with AIs driven by middle managers, that's their grave to dig.
+
+
+Discuss on [Hacker News](https://news.ycombinator.com/item?id=50242857), [bluesky](https://bsky.app/profile/did:plc:wc25su5iuxztr7h7akwo6j4v/post/3myrrq57ajc2l), [reddit](https://www.reddit.com/r/programming/comments/1xfw8g4/mathematicians_and_programmers_will_still_exist/), [old reddit](https://old.reddit.com/r/programming/comments/1xfw8g4/mathematicians_and_programmers_will_still_exist/).
