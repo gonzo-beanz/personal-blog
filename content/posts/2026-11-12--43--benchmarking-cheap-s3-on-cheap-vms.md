@@ -10,30 +10,26 @@ url: /blog/43
 # Contabo
 
 
-## Backblaze B2 — East
+## Backblaze B2
 
 <div class="s3-benchmark-chart-row">
-{{< s3-benchmark-chart operation="upload" provider="b2-east" >}}
-{{< s3-benchmark-chart operation="download" provider="b2-east" >}}
+{{< s3-benchmark-chart host="contabo" provider="b2-east" metric="upload_throughput_bytes_s" title="B2 East - Upload" max_y="210" >}}
+{{< s3-benchmark-chart host="contabo" provider="b2-east" metric="download_throughput_bytes_s" title="B2 East - Download" max_y="210" >}}
 </div>
 
-## Backblaze B2 — West
-
 <div class="s3-benchmark-chart-row">
-{{< s3-benchmark-chart operation="upload" provider="b2-west" >}}
-{{< s3-benchmark-chart operation="download" provider="b2-west" >}}
+{{< s3-benchmark-chart host="contabo" provider="b2-west" metric="upload_throughput_bytes_s" title="B2 West - Upload" max_y="210" >}}
+{{< s3-benchmark-chart host="contabo" provider="b2-west" metric="download_throughput_bytes_s" title="B2 West - Download" max_y="210" >}}
 </div>
 
-## Cloudflare R2 — East
+## Cloudflare R2
 
 <div class="s3-benchmark-chart-row">
-{{< s3-benchmark-chart operation="upload" provider="r2-east" >}}
-{{< s3-benchmark-chart operation="download" provider="r2-east" >}}
+{{< s3-benchmark-chart host="contabo" provider="r2-east" metric="upload_throughput_bytes_s" title="R2 East - Upload" max_y="210" >}}
+{{< s3-benchmark-chart host="contabo" provider="r2-east" metric="download_throughput_bytes_s" title="R2 East - Download" max_y="210" >}}
 </div>
 
-## Cloudflare R2 — West
-
 <div class="s3-benchmark-chart-row">
-{{< s3-benchmark-chart operation="upload" provider="r2-west" >}}
-{{< s3-benchmark-chart operation="download" provider="r2-west" >}}
+{{< s3-benchmark-chart host="contabo" provider="r2-west" metric="upload_throughput_bytes_s" title="R2 West - Upload" max_y="210" >}}
+{{< s3-benchmark-chart host="contabo" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="210" >}}
 </div>

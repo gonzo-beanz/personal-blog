@@ -1,14 +1,24 @@
-{{- $operation := .Get "operation" -}}
+{{- $host := .Get "host" -}}
+{{- $metric := .Get "metric" -}}
 {{- $provider := .Get "provider" -}}
-{{- $allRows := index site.Data.s3benchmarks.contabo $operation -}}
-{{- $rows := where $allRows "provider" $provider -}}
-{{- $chartID := printf "s3-%s-%s" $provider $operation -}}
-{{- $chartTitle := title $operation -}}
-<div class="s3-benchmark-chart" id="{{ $chartID }}" role="img" aria-label="{{ $operation }} throughput for {{ $provider }} by object size and concurrency"></div>
+{{- $title := .Get "title" -}}
+{{- $maxY := float (.Get "max_y") -}}
+{{- $rows := where site.Data.s3benchmarks "host" $host -}}
+{{- $rows = where $rows "metric_name" $metric -}}
+{{- $rows = where $rows "provider" $provider -}}
+{{- if not $rows -}}
+    {{- errorf "s3-benchmark-chart: no rows for host=%q metric=%q provider=%q" $host $metric $provider -}}
+{{- end -}}
+{{- if le $maxY 0.0 -}}
+    {{- errorf "s3-benchmark-chart: max_y must be a positive number, got %q" (.Get "max_y") -}}
+{{- end -}}
+{{- $chartID := printf "s3-%s-%s-%s" $host $provider $metric -}}
+<div class="s3-benchmark-chart" id="{{ $chartID }}" role="img" aria-label="{{ $title }} throughput for {{ $provider }} on {{ $host }} by object size and concurrency"></div>
 <script>
 (() => {
     const rows = {{ $rows | jsonify | safeJS }};
     const target = document.getElementById('{{ $chartID }}');
+    const maxY = {{ $maxY }};
     const sizes = [...new Set(rows.map(row => row.size_label))];
     const concurrencyValues = [...new Set(rows.map(row => Number(row.concurrency)))].sort((a, b) => a - b);
     const colors = ['#2563eb', '#f97316', '#16a34a', '#9333ea'];
@@ -20,9 +30,6 @@
         const variance = (sumSquares - (sum * sum) / count) / (count - 1);
         return Math.sqrt(Math.max(0, variance));
     };
-    const maxThroughput = Math.max(1, ...rows
-        .filter(row => Number(row.sample_count) > 1 && row.avg_mbps !== null)
-        .map(row => Number(row.avg_mbps) + sampleStdDev(row)));
     const pointsPerGroup = concurrencyValues.length;
     const xValues = sizes.flatMap((_, sizeIndex) => concurrencyValues.map((__, seriesIndex) =>
         sizeIndex * (pointsPerGroup + 1) + seriesIndex
@@ -62,7 +69,7 @@
                 const x = u.valToPos(xValues[pointIndex], 'x', true);
                 const mean = Number(row.avg_mbps);
                 const deviation = sampleStdDev(row);
-                const upper = u.valToPos(mean + deviation, 'y', true);
+                const upper = u.valToPos(Math.min(maxY, mean + deviation), 'y', true);
                 const lower = u.valToPos(Math.max(0, mean - deviation), 'y', true);
 
                 ctx.beginPath();
@@ -79,12 +86,12 @@
         ctx.restore();
     };
     const chartOptions = {
-        title: '{{ $chartTitle }}',
+        title: '{{ $title }}',
         width: Math.max(1, target.clientWidth),
         height: 240,
         scales: {
             x: { time: false, auto: false, range: [-1, sizes.length * (pointsPerGroup + 1) - 1] },
-            y: { auto: false, range: [0, maxThroughput * 1.1] }
+            y: { auto: false, range: [0, maxY] }
         },
         axes: [
             {

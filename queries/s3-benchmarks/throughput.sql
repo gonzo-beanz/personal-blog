@@ -1,6 +1,12 @@
--- Download throughput moments for the Contabo host, in decimal megabits per second.
+-- Throughput moments for every host and operation, in decimal megabits per second.
 -- Keep the complete dimension grid so missing measurements appear as null in charts.
 WITH
+    hosts(host) AS (
+        VALUES ('contabo'), ('digital-ocean-nyc1')
+    ),
+    metric_names(metric_name) AS (
+        VALUES ('upload_throughput_bytes_s'), ('download_throughput_bytes_s')
+    ),
     providers(provider) AS (
         VALUES ('b2-east'), ('b2-west'), ('r2-east'), ('r2-west')
     ),
@@ -16,6 +22,8 @@ WITH
     ),
     samples AS (
         SELECT
+            json_extract(labels, '$.host') AS host,
+            metric_name,
             json_extract(labels, '$.provider') AS provider,
             CAST(json_extract(labels, '$.parallel_con') AS INTEGER) AS concurrency,
             CAST(
@@ -24,10 +32,10 @@ WITH
             ) AS size_bytes,
             CAST(value AS REAL) * 8.0 / 1000000.0 AS throughput_mbps
         FROM metrics
-        WHERE metric_name = 'download_throughput_bytes_s'
-          AND json_extract(labels, '$.host') = 'contabo'
     )
 SELECT
+    hosts.host AS host,
+    metric_names.metric_name AS metric_name,
     providers.provider AS provider,
     concurrencies.concurrency AS concurrency,
     sizes.size_bytes AS size_bytes,
@@ -36,12 +44,27 @@ SELECT
     SUM(samples.throughput_mbps) AS sum_mbps,
     SUM(samples.throughput_mbps * samples.throughput_mbps) AS sum_squares_mbps,
     COUNT(samples.throughput_mbps) AS sample_count
-FROM providers
+FROM hosts
+CROSS JOIN metric_names
+CROSS JOIN providers
 CROSS JOIN concurrencies
 CROSS JOIN sizes
 LEFT JOIN samples
-    ON samples.provider = providers.provider
+    ON samples.host = hosts.host
+   AND samples.metric_name = metric_names.metric_name
+   AND samples.provider = providers.provider
    AND samples.concurrency = concurrencies.concurrency
    AND samples.size_bytes = sizes.size_bytes
-GROUP BY providers.provider, concurrencies.concurrency, sizes.size_bytes, sizes.size_label
-ORDER BY providers.provider, concurrencies.concurrency, sizes.size_bytes;
+GROUP BY
+    hosts.host,
+    metric_names.metric_name,
+    providers.provider,
+    concurrencies.concurrency,
+    sizes.size_bytes,
+    sizes.size_label
+ORDER BY
+    hosts.host,
+    metric_names.metric_name,
+    providers.provider,
+    concurrencies.concurrency,
+    sizes.size_bytes;
