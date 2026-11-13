@@ -4,17 +4,14 @@
 {{- $rows := where $allRows "provider" $provider -}}
 {{- $chartID := printf "s3-%s-%s" $provider $operation -}}
 {{- $chartTitle := title $operation -}}
-<div class="s3-benchmark-chart">
-    <canvas id="{{ $chartID }}" role="img" aria-label="{{ $operation }} throughput for {{ $provider }} by object size and concurrency"></canvas>
-</div>
+<div class="s3-benchmark-chart" id="{{ $chartID }}" role="img" aria-label="{{ $operation }} throughput for {{ $provider }} by object size and concurrency"></div>
 <script>
 (() => {
     const rows = {{ $rows | jsonify | safeJS }};
-
+    const target = document.getElementById('{{ $chartID }}');
     const sizes = [...new Set(rows.map(row => row.size_label))];
     const concurrencyValues = [...new Set(rows.map(row => Number(row.concurrency)))].sort((a, b) => a - b);
     const colors = ['#2563eb', '#f97316', '#16a34a', '#9333ea'];
-
     const sampleStdDev = row => {
         const count = Number(row.sample_count);
         if (count < 2) return 0;
@@ -23,93 +20,103 @@
         const variance = (sumSquares - (sum * sum) / count) / (count - 1);
         return Math.sqrt(Math.max(0, variance));
     };
-
-    const whiskerMax = Math.max(0, ...rows
+    const maxThroughput = Math.max(1, ...rows
         .filter(row => Number(row.sample_count) > 1 && row.avg_mbps !== null)
         .map(row => Number(row.avg_mbps) + sampleStdDev(row)));
+    const pointsPerGroup = concurrencyValues.length;
+    const xValues = sizes.flatMap((_, sizeIndex) => concurrencyValues.map((__, seriesIndex) =>
+        sizeIndex * (pointsPerGroup + 1) + seriesIndex
+    ));
+    const categoryCenters = sizes.map((_, sizeIndex) =>
+        sizeIndex * (pointsPerGroup + 1) + (pointsPerGroup - 1) / 2
+    );
+    const groupedBars = uPlot.paths.bars({ size: [0.9] });
+    const data = [
+        xValues,
+        ...concurrencyValues.map((concurrency, seriesIndex) => xValues.map((_, pointIndex) => {
+            const sizeIndex = Math.floor(pointIndex / pointsPerGroup);
+            if (pointIndex % pointsPerGroup !== seriesIndex) return null;
+            const size = sizes[sizeIndex];
+            const row = rows.find(item => Number(item.concurrency) === concurrency && item.size_label === size);
+            return row ? row.avg_mbps : null;
+        }))
+    ];
+    const drawWhiskers = u => {
+        const ctx = u.ctx;
+        const pxRatio = uPlot.pxRatio || window.devicePixelRatio || 1;
+        const cap = 3 * pxRatio;
+        ctx.save();
+        ctx.strokeStyle = '#111827';
+        ctx.lineWidth = 1 * pxRatio;
+        ctx.lineCap = 'round';
+        ctx.setLineDash([]);
+        ctx.lineDashOffset = 0;
 
-    const stdDevWhiskers = {
-        id: 'stdDevWhiskers',
-        afterDatasetsDraw(chart) {
-            const { ctx, scales: { y } } = chart;
-            ctx.save();
-            ctx.strokeStyle = '#111827';
-            ctx.lineWidth = 1;
-            ctx.lineCap = 'round';
+        concurrencyValues.forEach((concurrency, seriesIndex) => {
+            if (!u.series[seriesIndex + 1].show) return;
+            sizes.forEach((size, sizeIndex) => {
+                const row = rows.find(item => Number(item.concurrency) === concurrency && item.size_label === size);
+                if (!row || Number(row.sample_count) < 2 || row.avg_mbps === null) return;
 
-            chart.data.datasets.forEach((dataset, datasetIndex) => {
-                const bars = chart.getDatasetMeta(datasetIndex).data;
-                bars.forEach((bar, dataIndex) => {
-                    const row = rows.find(item =>
-                        Number(item.concurrency) === concurrencyValues[datasetIndex] &&
-                        item.size_label === sizes[dataIndex]
-                    );
-                    if (!row || Number(row.sample_count) < 2 || row.avg_mbps === null) return;
+                const pointIndex = sizeIndex * pointsPerGroup + seriesIndex;
+                const x = u.valToPos(xValues[pointIndex], 'x', true);
+                const mean = Number(row.avg_mbps);
+                const deviation = sampleStdDev(row);
+                const upper = u.valToPos(mean + deviation, 'y', true);
+                const lower = u.valToPos(Math.max(0, mean - deviation), 'y', true);
 
-                    const mean = Number(row.avg_mbps);
-                    const deviation = sampleStdDev(row);
-                    const upper = y.getPixelForValue(mean + deviation);
-                    const lower = y.getPixelForValue(Math.max(0, mean - deviation));
-                    const cap = 5;
-
-                    ctx.beginPath();
-                    ctx.moveTo(bar.x, upper);
-                    ctx.lineTo(bar.x, lower);
-                    ctx.moveTo(bar.x - cap, upper);
-                    ctx.lineTo(bar.x + cap, upper);
-                    ctx.moveTo(bar.x - cap, lower);
-                    ctx.lineTo(bar.x + cap, lower);
-                    ctx.stroke();
-                });
+                ctx.beginPath();
+                ctx.moveTo(x, upper);
+                ctx.lineTo(x, lower);
+                ctx.moveTo(x - cap, upper);
+                ctx.lineTo(x + cap, upper);
+                ctx.moveTo(x - cap, lower);
+                ctx.lineTo(x + cap, lower);
+                ctx.stroke();
             });
+        });
 
-            ctx.restore();
-        }
+        ctx.restore();
     };
-
-    new Chart(document.getElementById('{{ $chartID }}'), {
-        type: 'bar',
-        plugins: [stdDevWhiskers],
-        data: {
-            labels: sizes,
-            datasets: concurrencyValues.map((concurrency, index) => ({
-                label: `${concurrency} concurrent`,
-                data: sizes.map(size => {
-                    const row = rows.find(item => Number(item.concurrency) === concurrency && item.size_label === size);
-                    return row ? row.avg_mbps : null;
-                }),
-                backgroundColor: colors[index % colors.length]
-            }))
+    const chartOptions = {
+        title: '{{ $chartTitle }}',
+        width: Math.max(1, target.clientWidth),
+        height: 240,
+        scales: {
+            x: { time: false, auto: false, range: [-1, sizes.length * (pointsPerGroup + 1) - 1] },
+            y: { auto: false, range: [0, maxThroughput * 1.1] }
         },
-        options: {
-            responsive: true,
-            plugins: {
-                title: { display: true, text: '{{ $chartTitle }}' },
-                legend: { position: 'top' },
-                tooltip: {
-                    callbacks: {
-                        label(context) {
-                            const row = rows.find(item =>
-                                Number(item.concurrency) === concurrencyValues[context.datasetIndex] &&
-                                item.size_label === context.label
-                            );
-                            if (!row || row.sample_count === 0) return `${context.dataset.label}: no samples`;
-                            return `${context.dataset.label}: ${parseInt(context.parsed.y)} Mbit/s (mean of ${row.sample_count} samples)`;
-                        }
-                    }
-                }
+        axes: [
+            {
+                label: 'Object size',
+                labelSize: 18,
+                splits: () => categoryCenters,
+                values: (u, splits) => splits.map((_, index) => sizes[index] ?? '')
             },
-            aspectRatio: 4/5,
-            scales: {
-                x: { title: { display: true, text: 'Object size' } },
-                y: {
-                    beginAtZero: true,
-                    max: Math.max(1, whiskerMax * 1.1),
-                    title: { display: true, text: 'Average throughput (Mbit/s)' }
-                }
+            {
+                label: 'Average throughput (Mbit/s)',
+                labelSize: 18,
+                size: 56
             }
-        }
+        ],
+        series: [
+            { label: 'Object size' },
+            ...concurrencyValues.map((concurrency, seriesIndex) => ({
+                label: `${concurrency} concurrent`,
+                fill: colors[seriesIndex % colors.length],
+                width: 0,
+                points: { show: false },
+                paths: groupedBars
+            }))
+        ],
+        legend: { live: false },
+        hooks: { draw: [drawWhiskers] }
+    };
+    const chart = new uPlot(chartOptions, data, target);
+    const resizeObserver = new ResizeObserver(() => {
+        const width = target.clientWidth;
+        if (width > 0) chart.setSize({ width, height: 240 });
     });
+    resizeObserver.observe(target);
 })();
-
 </script>

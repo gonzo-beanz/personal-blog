@@ -325,12 +325,19 @@ blockquote {
     margin: 0 0;
 }
 
+.s3-benchmark-chart-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
 .s3-benchmark-chart {
-    display: inline-block;
-    vertical-align: top;
-    width: calc(50% - 2rem);
-    max-width: 500px;
-    margin: 0 .5rem;
+    flex: 1 1 18rem;
+    /* allows the chart to shrink with its flex line instead of being held
+       open by the fixed pixel width uPlot writes onto its root element */
+    min-width: 0;
 }
 
 /* TABLE OF CONTENTS */
