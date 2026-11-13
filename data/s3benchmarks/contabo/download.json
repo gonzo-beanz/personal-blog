@@ -1,0 +1,482 @@
+[
+  {
+    "provider": "b2-east",
+    "concurrency": 1,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 44.6950344,
+    "sum_mbps": 446.950344,
+    "sum_squares_mbps": 21053.06637115629,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 1,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 129.14499840000002,
+    "sum_mbps": 1291.449984,
+    "sum_squares_mbps": 175441.9900287049,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 1,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 162.1388128,
+    "sum_mbps": 1621.388128,
+    "sum_squares_mbps": 275874.495240409,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 1,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 189.7836568,
+    "sum_mbps": 1897.836568,
+    "sum_squares_mbps": 360619.0796601974,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 2,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 38.385816,
+    "sum_mbps": 383.85816,
+    "sum_squares_mbps": 15884.6673419872,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 2,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 123.2121672,
+    "sum_mbps": 1232.121672,
+    "sum_squares_mbps": 165030.05045448607,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 2,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 181.68412080000002,
+    "sum_mbps": 1816.841208,
+    "sum_squares_mbps": 332672.3506482563,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 2,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 180.1753304,
+    "sum_mbps": 1801.753304,
+    "sum_squares_mbps": 325753.82522364816,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 4,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 31.1927864,
+    "sum_mbps": 311.927864,
+    "sum_squares_mbps": 10863.59790487904,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 4,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 139.6748872,
+    "sum_mbps": 1396.748872,
+    "sum_squares_mbps": 197411.96417919418,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 4,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 170.7855824,
+    "sum_mbps": 1707.855824,
+    "sum_squares_mbps": 294877.77408320486,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-east",
+    "concurrency": 4,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 176.6893936,
+    "sum_mbps": 1766.893936,
+    "sum_squares_mbps": 313759.1230439603,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 1,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 5.3068136,
+    "sum_mbps": 53.068136,
+    "sum_squares_mbps": 317.562421407808,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 1,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 59.91229919999999,
+    "sum_mbps": 599.122992,
+    "sum_squares_mbps": 38451.46940771917,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 1,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 145.94098400000001,
+    "sum_mbps": 1459.40984,
+    "sum_squares_mbps": 217094.5745707465,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 1,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 134.0136016,
+    "sum_mbps": 1340.136016,
+    "sum_squares_mbps": 180770.32616713012,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 2,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 6.103479200000001,
+    "sum_mbps": 61.034792,
+    "sum_squares_mbps": 383.021298720448,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 2,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 57.0384504,
+    "sum_mbps": 570.384504,
+    "sum_squares_mbps": 35128.03304538951,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 2,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 118.5315832,
+    "sum_mbps": 1185.315832,
+    "sum_squares_mbps": 144311.21428732664,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 2,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 142.4898072,
+    "sum_mbps": 1424.898072,
+    "sum_squares_mbps": 204817.5975998398,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 4,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 5.910056,
+    "sum_mbps": 59.10056,
+    "sum_squares_mbps": 371.985636496896,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 4,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 51.7596624,
+    "sum_mbps": 517.596624,
+    "sum_squares_mbps": 29411.707132927488,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 4,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 128.3595256,
+    "sum_mbps": 1283.595256,
+    "sum_squares_mbps": 169549.61530497094,
+    "sample_count": 10
+  },
+  {
+    "provider": "b2-west",
+    "concurrency": 4,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 157.9267032,
+    "sum_mbps": 1579.267032,
+    "sum_squares_mbps": 250619.54114819627,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 1,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 9.4225064,
+    "sum_mbps": 94.225064,
+    "sum_squares_mbps": 945.4324803922559,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 1,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 51.7474352,
+    "sum_mbps": 517.474352,
+    "sum_squares_mbps": 29143.755916877184,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 1,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 150.7339792,
+    "sum_mbps": 1507.339792,
+    "sum_squares_mbps": 229314.5024563135,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 1,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 153.764792,
+    "sum_mbps": 1537.6479199999999,
+    "sum_squares_mbps": 238173.16760604506,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 2,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 7.147451200000001,
+    "sum_mbps": 71.474512,
+    "sum_squares_mbps": 548.906083453568,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 2,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 62.4891792,
+    "sum_mbps": 624.891792,
+    "sum_squares_mbps": 39656.669854914304,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 2,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 153.72928,
+    "sum_mbps": 1537.2928,
+    "sum_squares_mbps": 238275.05633204532,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 2,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 149.20226,
+    "sum_mbps": 1492.0226,
+    "sum_squares_mbps": 232797.7225765159,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 4,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 7.0250512,
+    "sum_mbps": 70.250512,
+    "sum_squares_mbps": 503.88417039551996,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 4,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 52.093748000000005,
+    "sum_mbps": 520.93748,
+    "sum_squares_mbps": 29694.228823897407,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 4,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 137.258688,
+    "sum_mbps": 1372.58688,
+    "sum_squares_mbps": 196161.22536343717,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-east",
+    "concurrency": 4,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 157.3330696,
+    "sum_mbps": 1573.330696,
+    "sum_squares_mbps": 248239.5115053264,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 1,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 5.0512424000000005,
+    "sum_mbps": 50.512424,
+    "sum_squares_mbps": 281.363454217408,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 1,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 42.6549392,
+    "sum_mbps": 426.549392,
+    "sum_squares_mbps": 19171.23038812557,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 1,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 133.76485680000002,
+    "sum_mbps": 1337.648568,
+    "sum_squares_mbps": 184459.97213649965,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 1,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 156.4271976,
+    "sum_mbps": 1564.271976,
+    "sum_squares_mbps": 250006.56078356577,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 2,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 4.8884216,
+    "sum_mbps": 48.884216,
+    "sum_squares_mbps": 251.624203381056,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 2,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 38.994403999999996,
+    "sum_mbps": 389.94404,
+    "sum_squares_mbps": 15713.487448197697,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 2,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 139.8930528,
+    "sum_mbps": 1398.9305279999999,
+    "sum_squares_mbps": 200329.60327939584,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 2,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 168.3438328,
+    "sum_mbps": 1683.438328,
+    "sum_squares_mbps": 284864.4686475901,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 4,
+    "size_bytes": 100000,
+    "size_label": "100 KB",
+    "avg_mbps": 4.9532456,
+    "sum_mbps": 49.532455999999996,
+    "sum_squares_mbps": 249.614619807936,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 4,
+    "size_bytes": 1000000,
+    "size_label": "1 MB",
+    "avg_mbps": 38.273527200000004,
+    "sum_mbps": 382.735272,
+    "sum_squares_mbps": 16454.518214910146,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 4,
+    "size_bytes": 10000000,
+    "size_label": "10 MB",
+    "avg_mbps": 134.7725088,
+    "sum_mbps": 1347.725088,
+    "sum_squares_mbps": 184657.01628124082,
+    "sample_count": 10
+  },
+  {
+    "provider": "r2-west",
+    "concurrency": 4,
+    "size_bytes": 100000000,
+    "size_label": "100 MB",
+    "avg_mbps": 168.40507440000002,
+    "sum_mbps": 1684.0507440000001,
+    "sum_squares_mbps": 285807.77769413474,
+    "sample_count": 10
+  }
+]

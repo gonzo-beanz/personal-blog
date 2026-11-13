@@ -325,6 +325,14 @@ blockquote {
     margin: 0 0;
 }
 
+.s3-benchmark-chart {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(50% - 2rem);
+    max-width: 500px;
+    margin: 0 .5rem;
+}
+
 /* TABLE OF CONTENTS */
 
 .toc {

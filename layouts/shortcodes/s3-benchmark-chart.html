@@ -1,0 +1,115 @@
+{{- $operation := .Get "operation" -}}
+{{- $provider := .Get "provider" -}}
+{{- $allRows := index site.Data.s3benchmarks.contabo $operation -}}
+{{- $rows := where $allRows "provider" $provider -}}
+{{- $chartID := printf "s3-%s-%s" $provider $operation -}}
+{{- $chartTitle := title $operation -}}
+<div class="s3-benchmark-chart">
+    <canvas id="{{ $chartID }}" role="img" aria-label="{{ $operation }} throughput for {{ $provider }} by object size and concurrency"></canvas>
+</div>
+<script>
+(() => {
+    const rows = {{ $rows | jsonify | safeJS }};
+
+    const sizes = [...new Set(rows.map(row => row.size_label))];
+    const concurrencyValues = [...new Set(rows.map(row => Number(row.concurrency)))].sort((a, b) => a - b);
+    const colors = ['#2563eb', '#f97316', '#16a34a', '#9333ea'];
+
+    const sampleStdDev = row => {
+        const count = Number(row.sample_count);
+        if (count < 2) return 0;
+        const sum = Number(row.sum_mbps);
+        const sumSquares = Number(row.sum_squares_mbps);
+        const variance = (sumSquares - (sum * sum) / count) / (count - 1);
+        return Math.sqrt(Math.max(0, variance));
+    };
+
+    const whiskerMax = Math.max(0, ...rows
+        .filter(row => Number(row.sample_count) > 1 && row.avg_mbps !== null)
+        .map(row => Number(row.avg_mbps) + sampleStdDev(row)));
+
+    const stdDevWhiskers = {
+        id: 'stdDevWhiskers',
+        afterDatasetsDraw(chart) {
+            const { ctx, scales: { y } } = chart;
+            ctx.save();
+            ctx.strokeStyle = '#111827';
+            ctx.lineWidth = 1;
+            ctx.lineCap = 'round';
+
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                const bars = chart.getDatasetMeta(datasetIndex).data;
+                bars.forEach((bar, dataIndex) => {
+                    const row = rows.find(item =>
+                        Number(item.concurrency) === concurrencyValues[datasetIndex] &&
+                        item.size_label === sizes[dataIndex]
+                    );
+                    if (!row || Number(row.sample_count) < 2 || row.avg_mbps === null) return;
+
+                    const mean = Number(row.avg_mbps);
+                    const deviation = sampleStdDev(row);
+                    const upper = y.getPixelForValue(mean + deviation);
+                    const lower = y.getPixelForValue(Math.max(0, mean - deviation));
+                    const cap = 5;
+
+                    ctx.beginPath();
+                    ctx.moveTo(bar.x, upper);
+                    ctx.lineTo(bar.x, lower);
+                    ctx.moveTo(bar.x - cap, upper);
+                    ctx.lineTo(bar.x + cap, upper);
+                    ctx.moveTo(bar.x - cap, lower);
+                    ctx.lineTo(bar.x + cap, lower);
+                    ctx.stroke();
+                });
+            });
+
+            ctx.restore();
+        }
+    };
+
+    new Chart(document.getElementById('{{ $chartID }}'), {
+        type: 'bar',
+        plugins: [stdDevWhiskers],
+        data: {
+            labels: sizes,
+            datasets: concurrencyValues.map((concurrency, index) => ({
+                label: `${concurrency} concurrent`,
+                data: sizes.map(size => {
+                    const row = rows.find(item => Number(item.concurrency) === concurrency && item.size_label === size);
+                    return row ? row.avg_mbps : null;
+                }),
+                backgroundColor: colors[index % colors.length]
+            }))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: '{{ $chartTitle }}' },
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label(context) {
+                            const row = rows.find(item =>
+                                Number(item.concurrency) === concurrencyValues[context.datasetIndex] &&
+                                item.size_label === context.label
+                            );
+                            if (!row || row.sample_count === 0) return `${context.dataset.label}: no samples`;
+                            return `${context.dataset.label}: ${parseInt(context.parsed.y)} Mbit/s (mean of ${row.sample_count} samples)`;
+                        }
+                    }
+                }
+            },
+            aspectRatio: 4/5,
+            scales: {
+                x: { title: { display: true, text: 'Object size' } },
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(1, whiskerMax * 1.1),
+                    title: { display: true, text: 'Average throughput (Mbit/s)' }
+                }
+            }
+        }
+    });
+})();
+
+</script>
