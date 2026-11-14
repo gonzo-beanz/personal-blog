@@ -1,0 +1,58 @@
+[
+  {
+    "host": "contabo",
+    "provider": "b2-east",
+    "mean_rtt_ms": 16.05263157894737,
+    "std_dev_rtt_ms": 19.959147918454423,
+    "sample_count": 190
+  },
+  {
+    "host": "contabo",
+    "provider": "b2-west",
+    "mean_rtt_ms": 81.52604166666667,
+    "std_dev_rtt_ms": 24.774149442203715,
+    "sample_count": 192
+  },
+  {
+    "host": "contabo",
+    "provider": "r2-east",
+    "mean_rtt_ms": 93.08947368421053,
+    "std_dev_rtt_ms": 48.17173197660935,
+    "sample_count": 190
+  },
+  {
+    "host": "contabo",
+    "provider": "r2-west",
+    "mean_rtt_ms": 133.41052631578947,
+    "std_dev_rtt_ms": 42.2779902554389,
+    "sample_count": 190
+  },
+  {
+    "host": "digital-ocean-nyc1",
+    "provider": "b2-east",
+    "mean_rtt_ms": 10.089473684210526,
+    "std_dev_rtt_ms": 5.594535763524685,
+    "sample_count": 190
+  },
+  {
+    "host": "digital-ocean-nyc1",
+    "provider": "b2-west",
+    "mean_rtt_ms": 75.8157894736842,
+    "std_dev_rtt_ms": 17.92555927438135,
+    "sample_count": 190
+  },
+  {
+    "host": "digital-ocean-nyc1",
+    "provider": "r2-east",
+    "mean_rtt_ms": 60.526315789473685,
+    "std_dev_rtt_ms": 34.48098689501573,
+    "sample_count": 190
+  },
+  {
+    "host": "digital-ocean-nyc1",
+    "provider": "r2-west",
+    "mean_rtt_ms": 118.62631578947368,
+    "std_dev_rtt_ms": 56.48966138593533,
+    "sample_count": 190
+  }
+]

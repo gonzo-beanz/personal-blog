@@ -1,0 +1,18 @@
+{{- $host := .Get "host" -}}
+{{- $provider := .Get "provider" -}}
+{{- $title := .Get "title" | default $provider -}}
+{{- $rows := where site.Data.s3benchmarkrtt "host" $host -}}
+{{- $rows = where $rows "provider" $provider -}}
+{{- if not $rows -}}
+    {{- errorf "s3-benchmark-rtt: no rows for host=%q provider=%q" $host $provider -}}
+{{- else -}}
+    {{- $row := index $rows 0 -}}
+    <div class="s3-benchmark-rtt">
+        <p>
+            RTT to <b>{{ $title }}</b> measured a mean of
+            <b>{{ printf "%.1f" $row.mean_rtt_ms }} ms</b> ± <b>{{ printf "%.1f" $row.std_dev_rtt_ms }}</b> ms
+            over <b>{{ $row.sample_count }}</b> samples
+        </p>
+    </div>
+
+{{- end -}}
