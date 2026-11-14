@@ -7,7 +7,8 @@
 html,
 body {
     height: 100%;
-    }
+    --site-blue: #4e7ad4;
+}
 
 body {
     background-color: #fff;
@@ -45,7 +46,7 @@ a:hover {
     color: #000;
 }
 a:visited {
-    color: #4e7ad4;
+    color: var(--site-blue);
 }
 
 *,
@@ -122,7 +123,21 @@ a:visited {
 }
 
 .clearfix {
-    *zoom: 1;
+    zoom: 1;
+}
+
+/* TABLES */
+
+table tbody tr:nth-child(even){
+    background-color: oklab(from var(--site-blue) l a b / .3);
+}
+
+table thead tr {
+    background-color: var(--site-blue);
+}
+
+table th, table td {
+    padding: .1rem .2rem;
 }
 
 /* SITE */
@@ -194,7 +209,7 @@ a:visited {
 }
 
 .footer .contact a {
-    color: #4e7ad4;
+    color: var(--site-blue);
 }
 
 .footer .rss {
