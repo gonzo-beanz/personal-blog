@@ -302,6 +302,10 @@ blockquote {
     margin: 0 auto;
 }
 
+.post h1 {
+    margin-top: 4rem;
+}
+
 .post h2 {
     margin-top: 3rem;
 }
@@ -358,11 +362,36 @@ blockquote {
     margin: 1.5rem 0;
 }
 
+.u-title > .s3-benchmark-legend-row {
+    margin-top: .25rem;
+}
+
+.u-inline tr:last-child {
+    margin-right: 0;
+}
+
+.s3-benchmark-legend-label {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: .5rem;
+    vertical-align: middle;
+}
+
+.s3-benchmark-legend-row > .u-legend {
+    display: inline-table;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0;
+    vertical-align: middle;
+}
+
 .s3-benchmark-chart {
     flex: 1 1 18rem;
     /* allows the chart to shrink with its flex line instead of being held
        open by the fixed pixel width uPlot writes onto its root element */
     min-width: 0;
+    margin-bottom: 3rem;
 }
 
 /* TABLE OF CONTENTS */

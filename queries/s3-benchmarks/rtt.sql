@@ -3,10 +3,18 @@
 -- so the dimension grid only spans hosts and providers.
 WITH
     hosts(host) AS (
-        VALUES ('contabo'), ('digital-ocean-nyc1')
+        VALUES
+            ('aws-us-east-1'),
+            ('contabo'),
+            ('digital-ocean-nyc3'),
+            ('hetzner-ash-1')
     ),
     providers(provider) AS (
-        VALUES ('b2-east'), ('b2-west'), ('r2-east'), ('r2-west')
+        VALUES
+            ('aws-east-1'), ('aws-west-1'),
+            ('b2-east'), ('b2-west'),
+            ('do-east-nyc3'), ('do-west-sfo3'),
+            ('r2-east'), ('r2-west')
     ),
     samples AS (
         SELECT

@@ -1,58 +1,32 @@
-[
-  {
-    "host": "contabo",
-    "provider": "b2-east",
-    "mean_rtt_ms": 16.05263157894737,
-    "std_dev_rtt_ms": 19.959147918454423,
-    "sample_count": 190
-  },
-  {
-    "host": "contabo",
-    "provider": "b2-west",
-    "mean_rtt_ms": 81.52604166666667,
-    "std_dev_rtt_ms": 24.774149442203715,
-    "sample_count": 192
-  },
-  {
-    "host": "contabo",
-    "provider": "r2-east",
-    "mean_rtt_ms": 93.08947368421053,
-    "std_dev_rtt_ms": 48.17173197660935,
-    "sample_count": 190
-  },
-  {
-    "host": "contabo",
-    "provider": "r2-west",
-    "mean_rtt_ms": 133.41052631578947,
-    "std_dev_rtt_ms": 42.2779902554389,
-    "sample_count": 190
-  },
-  {
-    "host": "digital-ocean-nyc1",
-    "provider": "b2-east",
-    "mean_rtt_ms": 10.089473684210526,
-    "std_dev_rtt_ms": 5.594535763524685,
-    "sample_count": 190
-  },
-  {
-    "host": "digital-ocean-nyc1",
-    "provider": "b2-west",
-    "mean_rtt_ms": 75.8157894736842,
-    "std_dev_rtt_ms": 17.92555927438135,
-    "sample_count": 190
-  },
-  {
-    "host": "digital-ocean-nyc1",
-    "provider": "r2-east",
-    "mean_rtt_ms": 60.526315789473685,
-    "std_dev_rtt_ms": 34.48098689501573,
-    "sample_count": 190
-  },
-  {
-    "host": "digital-ocean-nyc1",
-    "provider": "r2-west",
-    "mean_rtt_ms": 118.62631578947368,
-    "std_dev_rtt_ms": 56.48966138593533,
-    "sample_count": 190
-  }
-]
+[{"host":"aws-us-east-1","provider":"aws-east-1","mean_rtt_ms":4.694736842105264,"std_dev_rtt_ms":3.51135326935832,"sample_count":190},
+{"host":"aws-us-east-1","provider":"aws-west-1","mean_rtt_ms":75.73684210526316,"std_dev_rtt_ms":12.0538566805155,"sample_count":190},
+{"host":"aws-us-east-1","provider":"b2-east","mean_rtt_ms":4.457894736842105,"std_dev_rtt_ms":7.534458111668024,"sample_count":190},
+{"host":"aws-us-east-1","provider":"b2-west","mean_rtt_ms":75.07894736842105,"std_dev_rtt_ms":17.71553824139703,"sample_count":190},
+{"host":"aws-us-east-1","provider":"do-east-nyc3","mean_rtt_ms":16.87894736842105,"std_dev_rtt_ms":6.12662494997356,"sample_count":190},
+{"host":"aws-us-east-1","provider":"do-west-sfo3","mean_rtt_ms":78.69473684210526,"std_dev_rtt_ms":18.61959693822672,"sample_count":190},
+{"host":"aws-us-east-1","provider":"r2-east","mean_rtt_ms":62.7421052631579,"std_dev_rtt_ms":60.20152941323472,"sample_count":190},
+{"host":"aws-us-east-1","provider":"r2-west","mean_rtt_ms":76.13684210526316,"std_dev_rtt_ms":22.91627758460623,"sample_count":190},
+{"host":"contabo","provider":"aws-east-1","mean_rtt_ms":14.4421052631579,"std_dev_rtt_ms":7.541372013149392,"sample_count":190},
+{"host":"contabo","provider":"aws-west-1","mean_rtt_ms":82.31578947368421,"std_dev_rtt_ms":19.20855362702294,"sample_count":190},
+{"host":"contabo","provider":"b2-east","mean_rtt_ms":12.07853403141361,"std_dev_rtt_ms":8.545180848546277,"sample_count":191},
+{"host":"contabo","provider":"b2-west","mean_rtt_ms":74.76842105263158,"std_dev_rtt_ms":18.20108295608143,"sample_count":190},
+{"host":"contabo","provider":"do-east-nyc3","mean_rtt_ms":12.85789473684211,"std_dev_rtt_ms":4.696707817981164,"sample_count":190},
+{"host":"contabo","provider":"do-west-sfo3","mean_rtt_ms":77.58421052631579,"std_dev_rtt_ms":19.48519348752918,"sample_count":190},
+{"host":"contabo","provider":"r2-east","mean_rtt_ms":64.07894736842105,"std_dev_rtt_ms":26.52280797354323,"sample_count":190},
+{"host":"contabo","provider":"r2-west","mean_rtt_ms":90.36842105263158,"std_dev_rtt_ms":33.7805092770601,"sample_count":190},
+{"host":"digital-ocean-nyc3","provider":"aws-east-1","mean_rtt_ms":11.42105263157895,"std_dev_rtt_ms":4.83610527491074,"sample_count":190},
+{"host":"digital-ocean-nyc3","provider":"aws-west-1","mean_rtt_ms":74.91052631578947,"std_dev_rtt_ms":11.59170451133654,"sample_count":190},
+{"host":"digital-ocean-nyc3","provider":"b2-east","mean_rtt_ms":32.63684210526316,"std_dev_rtt_ms":28.57015334107623,"sample_count":190},
+{"host":"digital-ocean-nyc3","provider":"b2-west","mean_rtt_ms":78.14659685863874,"std_dev_rtt_ms":30.42972017512849,"sample_count":191},
+{"host":"digital-ocean-nyc3","provider":"do-east-nyc3","mean_rtt_ms":10.79473684210526,"std_dev_rtt_ms":5.711306310438212,"sample_count":190},
+{"host":"digital-ocean-nyc3","provider":"do-west-sfo3","mean_rtt_ms":88.87894736842105,"std_dev_rtt_ms":19.65606598745117,"sample_count":190},
+{"host":"digital-ocean-nyc3","provider":"r2-east","mean_rtt_ms":48.23157894736842,"std_dev_rtt_ms":17.69162814690732,"sample_count":190},
+{"host":"digital-ocean-nyc3","provider":"r2-west","mean_rtt_ms":81.87894736842105,"std_dev_rtt_ms":25.5992947767316,"sample_count":190},
+{"host":"hetzner-ash-1","provider":"aws-east-1","mean_rtt_ms":5.678947368421053,"std_dev_rtt_ms":3.844473659954375,"sample_count":190},
+{"host":"hetzner-ash-1","provider":"aws-west-1","mean_rtt_ms":66.53684210526316,"std_dev_rtt_ms":12.38005780458147,"sample_count":190},
+{"host":"hetzner-ash-1","provider":"b2-east","mean_rtt_ms":3.183246073298429,"std_dev_rtt_ms":6.023893821771043,"sample_count":191},
+{"host":"hetzner-ash-1","provider":"b2-west","mean_rtt_ms":76.85263157894737,"std_dev_rtt_ms":22.03699074946756,"sample_count":190},
+{"host":"hetzner-ash-1","provider":"do-east-nyc3","mean_rtt_ms":18,"std_dev_rtt_ms":9.462261438704362,"sample_count":190},
+{"host":"hetzner-ash-1","provider":"do-west-sfo3","mean_rtt_ms":74.2,"std_dev_rtt_ms":17.46688476781317,"sample_count":190},
+{"host":"hetzner-ash-1","provider":"r2-east","mean_rtt_ms":52.14736842105263,"std_dev_rtt_ms":40.20475857514592,"sample_count":190},
+{"host":"hetzner-ash-1","provider":"r2-west","mean_rtt_ms":71.52105263157895,"std_dev_rtt_ms":23.44953105762698,"sample_count":190}]

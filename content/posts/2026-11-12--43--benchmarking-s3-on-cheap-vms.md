@@ -92,6 +92,14 @@ If the file is smaller and the S3 service is far away (high RTT) then the TCP co
 
 This hypothesis follows from the previous. If smaller files have a harder time reaching full throughput, we're better off using a larger file instead.
 
+# Summary
+
+Below are charts for S3 providers. 
+
+{{< s3-benchmark-summary region="east" title="100 MB download — East regions" concurrency="4" max_y="8000" >}}
+
+{{< s3-benchmark-summary region="west" title="100 MB download — West regions" concurrency="4" max_y="3000" >}}
+
 # The results per VM
 
 Generally, I tried to keep all the VM instance sizing the same (2 vCPU and 4 GB RAM, attached drives). Except for the Contabo VPS which has way more CPU and RAM than it should at that price.
@@ -169,34 +177,34 @@ Notably this one offer 1 Gbps. This machine feels way snappier than the Contabo 
 
 ### Backblaze B2
 
-{{< s3-benchmark-rtt host="digital-ocean-nyc1" provider="b2-east" title="B2 East" >}}
+{{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="b2-east" title="B2 East" >}}
 
 <div class="s3-benchmark-chart-row">
-{{< s3-benchmark-chart host="digital-ocean-nyc1" provider="b2-east" metric="upload_throughput_bytes_s" title="B2 East - Upload" max_y="3000" >}}
-{{< s3-benchmark-chart host="digital-ocean-nyc1" provider="b2-east" metric="download_throughput_bytes_s" title="B2 East - Download" max_y="3000" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="b2-east" metric="upload_throughput_bytes_s" title="B2 East - Upload" max_y="3000" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="b2-east" metric="download_throughput_bytes_s" title="B2 East - Download" max_y="3000" >}}
 </div>
 
-{{< s3-benchmark-rtt host="digital-ocean-nyc1" provider="b2-west" title="B2 West" >}}
+{{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="b2-west" title="B2 West" >}}
 
 <div class="s3-benchmark-chart-row">
-{{< s3-benchmark-chart host="digital-ocean-nyc1" provider="b2-west" metric="upload_throughput_bytes_s" title="B2 West - Upload" max_y="1000" >}}
-{{< s3-benchmark-chart host="digital-ocean-nyc1" provider="b2-west" metric="download_throughput_bytes_s" title="B2 West - Download" max_y="1000" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="b2-west" metric="upload_throughput_bytes_s" title="B2 West - Upload" max_y="1000" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="b2-west" metric="download_throughput_bytes_s" title="B2 West - Download" max_y="1000" >}}
 </div>
 
 ### Cloudflare R2
 
-{{< s3-benchmark-rtt host="digital-ocean-nyc1" provider="r2-east" title="R2 East" >}}
+{{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="r2-east" title="R2 East" >}}
 
 <div class="s3-benchmark-chart-row">
-{{< s3-benchmark-chart host="digital-ocean-nyc1" provider="r2-east" metric="upload_throughput_bytes_s" title="R2 East - Upload" max_y="2000" >}}
-{{< s3-benchmark-chart host="digital-ocean-nyc1" provider="r2-east" metric="download_throughput_bytes_s" title="R2 East - Download" max_y="2000" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="r2-east" metric="upload_throughput_bytes_s" title="R2 East - Upload" max_y="2000" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="r2-east" metric="download_throughput_bytes_s" title="R2 East - Download" max_y="2000" >}}
 </div>
 
-{{< s3-benchmark-rtt host="digital-ocean-nyc1" provider="r2-west" title="R2 West" >}}
+{{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="r2-west" title="R2 West" >}}
 
 <div class="s3-benchmark-chart-row">
-{{< s3-benchmark-chart host="digital-ocean-nyc1" provider="r2-west" metric="upload_throughput_bytes_s" title="R2 West - Upload" max_y="2000" >}}
-{{< s3-benchmark-chart host="digital-ocean-nyc1" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="2000" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="r2-west" metric="upload_throughput_bytes_s" title="R2 West - Upload" max_y="2000" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="2000" >}}
 </div>
 
 ## Hetzner (€17.49 | ~$19.28 / mo)

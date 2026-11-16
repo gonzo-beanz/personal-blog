@@ -1,0 +1,124 @@
+{{- $region := .Get "region" -}}
+{{- $title := .Get "title" | default (printf "%s region" (title $region)) -}}
+{{- $concurrency := int (.Get "concurrency" | default "4") -}}
+{{- $maxY := float (.Get "max_y") -}}
+{{- $rows := where site.Data.s3benchmarks "metric_name" "download_throughput_bytes_s" -}}
+{{- $rows = where $rows "size_bytes" 100000000 -}}
+{{- $rows = where $rows "concurrency" $concurrency -}}
+{{- if not $rows -}}
+    {{- errorf "s3-benchmark-summary: no rows for region=%q concurrency=%d" $region $concurrency -}}
+{{- end -}}
+{{- if le $maxY 0.0 -}}
+    {{- errorf "s3-benchmark-summary: max_y must be a positive number, got %q" (.Get "max_y") -}}
+{{- end -}}
+{{- $chartID := printf "s3-summary-%s" $region -}}
+<div class="s3-benchmark-chart s3-benchmark-summary" id="{{ $chartID }}" role="img" aria-label="{{ $title }} throughput when downloading a 100 MB file"></div>
+<script>
+(() => {
+    const rows = {{ $rows | jsonify | safeJS }}.filter(row => row.provider.split('-').includes('{{ $region }}'));
+    const target = document.getElementById('{{ $chartID }}');
+    const maxY = {{ $maxY }};
+    const providers = [...new Set(rows.map(row => row.provider))];
+    const hosts = [...new Set(rows.map(row => row.host))];
+    const colors = ['#2563eb', '#f97316', '#16a34a', '#9333ea'];
+    const providerLabel = value => ({
+        aws: 'S3', b2: 'Backblaze B2', do: 'DO Spaces', r2: 'Cloudflare R2'
+    }[value.split('-')[0]] || value);
+    const hostLabel = value => ({
+        'aws-us-east-1': 'AWS EC2', contabo: 'Contabo',
+        'digital-ocean-nyc3': 'DigitalOcean', 'hetzner-ash-1': 'Hetzner'
+    }[value] || value);
+    const sampleStdDev = row => {
+        const count = Number(row.sample_count);
+        if (count < 2) return 0;
+        const sum = Number(row.sum_mbps);
+        const sumSquares = Number(row.sum_squares_mbps);
+        const variance = (sumSquares - (sum * sum) / count) / (count - 1);
+        return Math.sqrt(Math.max(0, variance));
+    };
+    const pointsPerGroup = hosts.length;
+    const xValues = providers.flatMap((_, providerIndex) => hosts.map((__, hostIndex) =>
+        providerIndex * (pointsPerGroup + 1) + hostIndex
+    ));
+    const categoryCenters = providers.map((_, providerIndex) =>
+        providerIndex * (pointsPerGroup + 1) + (pointsPerGroup - 1) / 2
+    );
+    const groupedBars = uPlot.paths.bars({ size: [0.9] });
+    const data = [
+        xValues,
+        ...hosts.map((host, seriesIndex) => xValues.map((_, pointIndex) => {
+            const providerIndex = Math.floor(pointIndex / pointsPerGroup);
+            if (pointIndex % pointsPerGroup !== seriesIndex) return null;
+            const row = rows.find(item => item.provider === providers[providerIndex] && item.host === host);
+            return row ? row.avg_mbps : null;
+        }))
+    ];
+    const drawWhiskers = u => {
+        const ctx = u.ctx;
+        const pxRatio = uPlot.pxRatio || window.devicePixelRatio || 1;
+        const cap = 3 * pxRatio;
+        ctx.save();
+        ctx.strokeStyle = '#111827';
+        ctx.lineWidth = 1 * pxRatio;
+        ctx.lineCap = 'round';
+        hosts.forEach((host, seriesIndex) => {
+            if (!u.series[seriesIndex + 1].show) return;
+            providers.forEach((provider, providerIndex) => {
+                const row = rows.find(item => item.provider === provider && item.host === host);
+                if (!row || Number(row.sample_count) < 2 || row.avg_mbps === null) return;
+                const pointIndex = providerIndex * pointsPerGroup + seriesIndex;
+                const x = u.valToPos(xValues[pointIndex], 'x', true);
+                const mean = Number(row.avg_mbps);
+                const deviation = sampleStdDev(row);
+                const upper = u.valToPos(Math.min(maxY, mean + deviation), 'y', true);
+                const lower = u.valToPos(Math.max(0, mean - deviation), 'y', true);
+                ctx.beginPath();
+                ctx.moveTo(x, upper); ctx.lineTo(x, lower);
+                ctx.moveTo(x - cap, upper); ctx.lineTo(x + cap, upper);
+                ctx.moveTo(x - cap, lower); ctx.lineTo(x + cap, lower);
+                ctx.stroke();
+            });
+        });
+        ctx.restore();
+    };
+    const chart = new uPlot({
+        title: '{{ $title }}',
+        width: Math.max(1, target.clientWidth),
+        height: 280,
+        scales: {
+            x: { time: false, auto: false, range: [-1, providers.length * (pointsPerGroup + 1) - 1] },
+            y: { auto: false, range: [0, maxY] }
+        },
+        axes: [
+            { label: 'S3 provider', labelSize: 18, splits: () => categoryCenters,
+              values: (u, splits) => splits.map((_, index) => providerLabel(providers[index])) },
+            { label: 'Average throughput (Mbit/s)', labelSize: 18, size: 56 }
+        ],
+        series: [
+            { label: 'S3 provider' },
+            ...hosts.map((host, index) => ({ label: hostLabel(host), fill: colors[index % colors.length], width: 0,
+                points: { show: false }, paths: groupedBars }))
+        ],
+        legend: {
+            live: false,
+            mount: (self, legend) => {
+                const title = self.root.querySelector('.u-title');
+                if (!title) return;
+                const row = document.createElement('div');
+                row.className = 's3-benchmark-legend-row';
+                const label = document.createElement('span');
+                label.className = 's3-benchmark-legend-label';
+                label.textContent = 'VM host';
+                row.append(label, legend);
+                title.append(row);
+            }
+        },
+        hooks: { draw: [drawWhiskers] }
+    }, data, target);
+    const resizeObserver = new ResizeObserver(() => {
+        const width = target.clientWidth;
+        if (width > 0) chart.setSize({ width, height: 280 });
+    });
+    resizeObserver.observe(target);
+})();
+</script>

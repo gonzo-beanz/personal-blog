@@ -116,7 +116,10 @@
                 paths: groupedBars
             }))
         ],
-        legend: { live: false },
+        legend: {
+            live: false,
+            mount: (self, legend) => self.root.querySelector('.u-title')?.appendChild(legend)
+        },
         hooks: { draw: [drawWhiskers] }
     };
     const chart = new uPlot(chartOptions, data, target);
