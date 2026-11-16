@@ -32,7 +32,7 @@ I considered these other providers but I had some issues:
 | ---------------------- | ------- | ------ | ------------------------------------------------------------------------------------------- |
 | Contabo Object Storage | $11.96  | Free   | Max advertised throughput is only 10 megabytes / s                                          |
 | Wasabi                 | $7.99   | Free   | Minimum of $7.99/mo. I used to have an account. I won't create a new one just for this test |
-| Vultr Object Storage   | $20     | $10    | I was able to create a bucket in the panel but it wasn't accessible                         |
+| Vultr Object Storage   | $20     | $10    | I was able to create a bucket in the panel but it wasn't accessible via the API             |
 
 There's many other providers but I don't have infinite time. Reach out to me if you'd like to see a follow up with another provider.
 
@@ -51,6 +51,10 @@ For each operation I also attempt different levels of concurrency. For **uploads
 
 For **downloads I do multiple HTTP range requests** for the file. For example, when downloading the 100 kilobyte file with a concurrency of 2 we would execute two simultaneous requests: one for the first 50 kilobytes and the other for the last 50 kilobytes.
 
+I stand up each VM host as close as possible to AWS's `us-east-1`. I'm assuming that the other providers are geographically close.
+
+![US East Coast Data Center Map pointing to AWS us-east-1 rough location](/img/posts/43/us-east-coast-data-center-map.png)
+
 Finally before each operation, I do a [HeadBucket](https://docs.aws.amazon.com/AmazonS3/latest/API/API_HeadBucket.html) request to measure the Round Trip Time (RTT). This is because some providers blocked ICMP pings to their endpoints 🤷.
 
 # Hypotheses
@@ -60,8 +64,6 @@ I have a couple of hunches.
 ### 1. Cheaper S3 hosts will have less consistent throughput
 
 Because of the way S3 is designed, it's more stable at large scales. There's a neat phenomenon where each tenant's different bursty usage patterns smooth out into the average (see [AWS re:Invent 2024 - Dive deep on Amazon S3 @ 13:16](https://youtu.be/NXehLy7IiPM?si=gTN5ZVIBASF12maf&t=796)).
-
-This is similar to the electrical power grid. Your home electric tea kettle can use 1kw of power for 90s. An extremely bursty usage pattern that's imperceptible at scale. (There's obviously usage phenomenoms that contradict this, like World Cup matches)
 
 I'm assuming that Amazon is by far the biggest provider even including GCP and Azure. They should have the most stable throughput given all the "extra" capacity they have at their scale.
 
@@ -92,20 +94,33 @@ This hypothesis follows from the previous. If smaller files have a harder time r
 
 # The results per VM
 
+Generally, I tried to keep all the VM instance sizing the same (2 vCPU and 4 GB RAM, attached drives). Except for the Contabo VPS which has way more CPU and RAM than it should at that price.
+
 This took quite a while to measure and compile. Please enjoy the colorful graphs.
+
+## AWS ($55.84 / mo + $1.60 / mo storage)
+
+The AWS EC2 machine I chose is c6a.large. It features
+
+- 2 vCPU
+- 4 GB RAM
+- 20 GB Elastic Block Storage (EBS)
+- "Up to 5 Gbps"
+
+This is the one to beat! I chose this one over the similar t3a.medium instance since the `t` instances have bursty CPUs and I was worried the burstiness might affect the benchmark timings. Also it seems like a fairer comparison to other VMs, even if those other VMs offer "shared" vCPUs instead of dedicated vCPUs. This is yet another variable that's hard to control since it's unclear how much of vCPU you are provisioned in ANY cloud/provider.
 
 ## Contabo ($7.51 / mo)
 
-First up is the cheapest and (unsurprisingly) worst performer!
+First up is the cheapest and (unsurprisingly) worst performer! The price displayed is after a 12 month commitment.
 
-This is a Cloud VPS 4 Core server. It features.
+This is a Cloud VPS 4 Core server. It features
 
 - 4 vCPU (shared)
 - 8 GB RAM
 - 100 GB SSD (?)
 - 200 Mbps
 
-The price displayed is after a 12 month commitment. It seemed like a bonkers deal and I slighty regret it because the disk performance is palpable. It adds quite a bit of wait to every operation. Go compilation no longer feels instant :(
+It seemed like a bonkers deal and I slighty regret it because the disk is not an NVMe and may not even be an SSD. The drive performance is palpable. It adds quite a bit of wait to every operation. Go compilation no longer feels instant :(
 
 The biggest limitation is the 200 Mbps. It's less than what I get at home!
 
@@ -141,16 +156,16 @@ The biggest limitation is the 200 Mbps. It's less than what I get at home!
 {{< s3-benchmark-chart host="contabo" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="210" >}}
 </div>
 
-## DigitalOcean ($48 / mo)
+## DigitalOcean ($24 / mo)
 
-Next up we have a Digital Ocean droplet from the NYC 1 region. It's got similar specs
+The Digital Ocean Droplet used the NYC3 region to give it the best home field advantage with the NYC3 Spaces storage. It has...
 
-- 4 vCPU (shared)
-- 8 GB RAM
-- 160 GB SSD
+- 2 vCPU (shared)
+- 4 GB RAM
+- 80 GB SSD
 - 1 Gbps
 
-Notably this one offer 1 Gbps. This machine feels way snappier is also more than 6x more expensive so it better be better.
+Notably this one offer 1 Gbps. This machine feels way snappier than the Contabo VPS.
 
 ### Backblaze B2
 
@@ -183,3 +198,14 @@ Notably this one offer 1 Gbps. This machine feels way snappier is also more than
 {{< s3-benchmark-chart host="digital-ocean-nyc1" provider="r2-west" metric="upload_throughput_bytes_s" title="R2 West - Upload" max_y="2000" >}}
 {{< s3-benchmark-chart host="digital-ocean-nyc1" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="2000" >}}
 </div>
+
+## Hetzner (€17.49 | ~$19.28 / mo)
+
+The Hetzner VM used the ash-1 region. This should be really close to the AWS S3 east region, so we should see some great performance there. The specs:
+
+- 2 vCPU (shared)
+- 4 GB RAM
+- 80 GB SSD
+- 1 Gbps
+
+This feels a little snappier than the Digital Ocean Droplet. I've used Hetzner for a long time up until they hit me with 2 price increases in 6 months. During that time, I was very satisfied with the CPU and disk performance.

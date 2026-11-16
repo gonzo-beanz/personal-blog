@@ -333,7 +333,7 @@ blockquote {
 }
 
 .post-content > table thead tr {
-    background-color: var(--site-blue);
+    background-color: oklab(from var(--site-blue) l a b / .7);;
 }
 
 .post-content > table th, .post-content > table td {
