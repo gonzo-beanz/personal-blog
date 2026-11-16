@@ -1,0 +1,70 @@
+{{- $hosts := slice "aws-us-east-1" "contabo" "digital-ocean-nyc3" "hetzner-ash-1" -}}
+{{- $providers := slice "aws-east-1" "aws-west-1" "b2-east" "b2-west" "do-east-nyc3" "do-west-sfo3" "r2-east" "r2-west" -}}
+{{- $labels := dict
+    "aws-east-1" "AWS East"
+    "aws-west-1" "AWS West"
+    "b2-east" "B2 East"
+    "b2-west" "B2 West"
+    "do-east-nyc3" "DO Spaces East"
+    "do-west-sfo3" "DO Spaces West"
+    "r2-east" "R2 East"
+    "r2-west" "R2 West"
+-}}
+<style>
+.s3-benchmark-rtt-table {
+    margin: 0 auto;
+    margin-bottom: 3rem;
+}
+
+.post-content > table.s3-benchmark-rtt-table thead tr,
+.post-content > table.s3-benchmark-rtt-table tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+.post-content > table.s3-benchmark-rtt-table td {
+    text-align: center;
+}
+
+.post-content > table.s3-benchmark-rtt-table th:first-child {
+    text-align: left;
+}
+</style>
+
+<table class="s3-benchmark-rtt-table">
+    <thead>
+        <tr>
+            <th scope="col">S3 bucket</th>
+            <th scope="col">AWS EC2</th>
+            <th scope="col">Contabo</th>
+            <th scope="col">DigitalOcean</th>
+            <th scope="col">Hetzner</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{- range $provider := $providers }}
+        <tr>
+            <th scope="row">{{ index $labels $provider }}</th>
+            {{- range $host := $hosts }}
+                {{- $rows := where site.Data.s3benchmarkrtt "host" $host -}}
+                {{- $rows = where $rows "provider" $provider -}}
+                {{- if $rows -}}
+                    {{- $row := index $rows 0 -}}
+                    <td data-rtt="{{ $row.mean_rtt_ms }}">{{ printf "%.1f" $row.mean_rtt_ms }}</td>
+                {{- else -}}
+                    <td>—</td>
+                {{- end -}}
+            {{- end }}
+        </tr>
+    {{- end }}
+    </tbody>
+</table>
+<script>
+(() => {
+    const cells = [...document.querySelectorAll('.s3-benchmark-rtt-table td[data-rtt]')];
+    const max = Math.max(0, ...cells.map(cell => Number(cell.dataset.rtt)));
+    cells.forEach(cell => {
+        const value = Number(cell.dataset.rtt);
+        const opacity = max > 0 ? value / max * 0.75 : 0;
+        cell.style.backgroundColor = `oklch(from var(--site-blue) l c h / ${opacity})`;
+    });
+})();
+</script>

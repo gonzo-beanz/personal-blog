@@ -38,8 +38,11 @@ There's many other providers but I don't have infinite time. Reach out to me if 
 
 # The benchmark details
 
-For each of the VM hosts, I upload and then download files of different sizes:
+I setup two buckets in each of the S3 providers: one in the US east region and one in the US west region.
 
+I then spun up one VM host for each host provider in the US east region. This allows us to test if a higher RTT affects throughput.
+
+For each of the VM hosts, I upload and then download files of different sizes:
 - 100 kilobytes
 - 1 mebabytes
 - 10 megabytes
@@ -67,7 +70,7 @@ Because of the way S3 is designed, it's more stable at large scales. There's a n
 
 I'm assuming that Amazon is by far the biggest provider even including GCP and Azure. They should have the most stable throughput given all the "extra" capacity they have at their scale.
 
-### 2. Throughput is dependent on distance to the S3 service and size of the object
+### 2. Throughput is dependent on distance to the S3
 
 The closer you are to the service the more throughput. S3 works over HTTP which works over TCP. TCP has a simple formula for maximum throughput:
 
@@ -84,21 +87,43 @@ So if we compare 50 ms vs 500ms:
 8 megabyte / .05 s = 1280 megabits / s
 ```
 
-Another assumption is the bigger the file the more throughput. When a TCP connection is established the sender sends packets and gradually increases the number of packets until it reaches a threshold. This mechanism works by the sender detecting missing ACKs for packets. ACKs are affected by RTT. The ramp up time is therefore affected by RTT.
+### 3. Throughput is dependent on the size of the object
+
+Another assumption is that the bigger the file the higher the throughput. 
+
+When a TCP connection is established the sender sends packets and gradually increases the number of packets until it reaches a threshold. This mechanism works by the sender detecting missing ACKs for packets. ACKs are affected by RTT. The ramp up time is therefore affected by RTT.
 
 If the file is smaller and the S3 service is far away (high RTT) then the TCP connection might not have enough time to reach full-throughput.
 
-### 3. Reading many small files is slower than reading one large file of the same total size
-
-This hypothesis follows from the previous. If smaller files have a harder time reaching full throughput, we're better off using a larger file instead.
-
 # Summary
 
-Below are charts for S3 providers. 
+For context, here is the latency table for each host to S3 bucket in milliseconds. RTT from the host to the S3 service.
 
-{{< s3-benchmark-summary region="east" title="100 MB download — East regions" concurrency="4" max_y="8000" >}}
+{{< s3-benchmark-rtt-table >}}
 
-{{< s3-benchmark-summary region="west" title="100 MB download — West regions" concurrency="4" max_y="3000" >}}
+## East <--> East
+
+The results were NOT what I had expected.
+
+{{< s3-benchmark-summary region="east" title="100 MB download (4 concurrency) — East regions" concurrency="4" max_y="8000" >}}
+
+First of all, the Contabo host has it's bandwidth capped at 200 Mbits / s. Poor chap.
+
+My first impression is that my first hypotheses was correct. S3 is way more consistent than the other providers. Look at that tiny standard deviation! 
+
+On the other hand, I never would have bet that Backblaze and DigitalOcean can beat S3 in throughput IN THEIR OWN DATACENTERS. As far as I know, they both have their own data centers and don't colocate within Amazon. Maybe they do? They at least must have dedicated fiber connections to AWS to achieve this performance. So interesting. 
+
+This makes these S3 alternatives way more appealing. Specially DigitalOcean! They have really consistent performance.
+
+The second assumption seems to hold as well if we take a look at Cloudflare R2's performance. The RTT is much higher than it's east coast peers and the speed suffers.
+
+## East <--> West
+
+Measuring throughput to the West regions gives a way more level playing field.
+
+{{< s3-benchmark-summary region="west" title="100 MB download (4 concurrency) — West regions" concurrency="4" max_y="8000" >}}
+
+Here interstingly enough Cloudflare performs really well. It performed horribly in the East<<->>East benchmark so they have a weird specialization in cross-region throughput?
 
 # The results per VM
 

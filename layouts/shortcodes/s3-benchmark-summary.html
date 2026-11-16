@@ -36,20 +36,20 @@
         const variance = (sumSquares - (sum * sum) / count) / (count - 1);
         return Math.sqrt(Math.max(0, variance));
     };
-    const pointsPerGroup = hosts.length;
-    const xValues = providers.flatMap((_, providerIndex) => hosts.map((__, hostIndex) =>
-        providerIndex * (pointsPerGroup + 1) + hostIndex
+    const pointsPerGroup = providers.length;
+    const xValues = hosts.flatMap((_, hostIndex) => providers.map((__, providerIndex) =>
+        hostIndex * (pointsPerGroup + 1) + providerIndex
     ));
-    const categoryCenters = providers.map((_, providerIndex) =>
-        providerIndex * (pointsPerGroup + 1) + (pointsPerGroup - 1) / 2
+    const categoryCenters = hosts.map((_, hostIndex) =>
+        hostIndex * (pointsPerGroup + 1) + (pointsPerGroup - 1) / 2
     );
     const groupedBars = uPlot.paths.bars({ size: [0.9] });
     const data = [
         xValues,
-        ...hosts.map((host, seriesIndex) => xValues.map((_, pointIndex) => {
-            const providerIndex = Math.floor(pointIndex / pointsPerGroup);
+        ...providers.map((provider, seriesIndex) => xValues.map((_, pointIndex) => {
+            const hostIndex = Math.floor(pointIndex / pointsPerGroup);
             if (pointIndex % pointsPerGroup !== seriesIndex) return null;
-            const row = rows.find(item => item.provider === providers[providerIndex] && item.host === host);
+            const row = rows.find(item => item.provider === provider && item.host === hosts[hostIndex]);
             return row ? row.avg_mbps : null;
         }))
     ];
@@ -61,12 +61,12 @@
         ctx.strokeStyle = '#111827';
         ctx.lineWidth = 1 * pxRatio;
         ctx.lineCap = 'round';
-        hosts.forEach((host, seriesIndex) => {
+        providers.forEach((provider, seriesIndex) => {
             if (!u.series[seriesIndex + 1].show) return;
-            providers.forEach((provider, providerIndex) => {
+            hosts.forEach((host, hostIndex) => {
                 const row = rows.find(item => item.provider === provider && item.host === host);
                 if (!row || Number(row.sample_count) < 2 || row.avg_mbps === null) return;
-                const pointIndex = providerIndex * pointsPerGroup + seriesIndex;
+                const pointIndex = hostIndex * pointsPerGroup + seriesIndex;
                 const x = u.valToPos(xValues[pointIndex], 'x', true);
                 const mean = Number(row.avg_mbps);
                 const deviation = sampleStdDev(row);
@@ -86,17 +86,17 @@
         width: Math.max(1, target.clientWidth),
         height: 280,
         scales: {
-            x: { time: false, auto: false, range: [-1, providers.length * (pointsPerGroup + 1) - 1] },
+            x: { time: false, auto: false, range: [-1, hosts.length * (pointsPerGroup + 1) - 1] },
             y: { auto: false, range: [0, maxY] }
         },
         axes: [
-            { label: 'S3 provider', labelSize: 18, splits: () => categoryCenters,
-              values: (u, splits) => splits.map((_, index) => providerLabel(providers[index])) },
+            { label: 'VM host', labelSize: 18, rotate: () => -15, splits: () => categoryCenters,
+              values: (u, splits) => splits.map((_, index) => hostLabel(hosts[index])) },
             { label: 'Average throughput (Mbit/s)', labelSize: 18, size: 56 }
         ],
         series: [
-            { label: 'S3 provider' },
-            ...hosts.map((host, index) => ({ label: hostLabel(host), fill: colors[index % colors.length], width: 0,
+            { label: 'VM host' },
+            ...providers.map((provider, index) => ({ label: providerLabel(provider), fill: colors[index % colors.length], width: 0,
                 points: { show: false }, paths: groupedBars }))
         ],
         legend: {
@@ -108,7 +108,7 @@
                 row.className = 's3-benchmark-legend-row';
                 const label = document.createElement('span');
                 label.className = 's3-benchmark-legend-label';
-                label.textContent = 'VM host';
+                label.textContent = 'S3 provider';
                 row.append(label, legend);
                 title.append(row);
             }
