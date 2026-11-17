@@ -99,7 +99,11 @@ If the file is smaller and the S3 service is far away (high RTT) then the TCP co
 
 # Summary
 
-For context, here is the latency table for each host to S3 bucket. The values are RTT in milliseconds from the host to the S3 service.
+For context, here is the latency table for each host and each S3 provider. 
+
+As an example, I've marked first column, third row in red below.
+
+This cell says: "From **AWS EC2** it takes **4.5 ms** to get a response from **B2 East**"
 
 {{< s3-benchmark-rtt-table >}}
 
@@ -406,6 +410,57 @@ This feels a little snappier than the Digital Ocean Droplet. I've used Hetzner f
 
 ## Closing thoughts
 
-When I started this benchmarking pursuit, I didn't expect to get these wacky results.
+You can [download the benchmark database](/downloads/s3-benchmark-reporting.db.gz) in case you're curious. Some quick info about it:
 
-You can [download the cleaned benchmark database](/downloads/s3-benchmark-reporting.db.gz) (SQLite, gzip-compressed).
+```bash
+$ gunzip reporting_clean.db.gz
+
+
+$ sqlite3 reporting_clean.db
+
+
+reporting_clean.db-> .schema
+CREATE TABLE metrics (
+        metric_name TEXT NOT NULL,
+        labels TEXT NOT NULL CHECK (json_valid(labels) AND json_type(labels) = 'object'),
+        value
+);
+
+
+reporting_clean.db-> SELECT 
+  COUNT(*), json_extract(labels, '$.host') as host 
+FROM metrics 
+GROUP BY host;
+╭──────────┬────────────────────╮
+│ COUNT(*) │        host        │
+╞══════════╪════════════════════╡
+│     5520 │ aws-us-east-1      │
+│     5522 │ contabo            │
+│     5522 │ digital-ocean-nyc3 │
+│     5522 │ hetzner-ash-1      │
+╰──────────┴────────────────────╯
+
+
+reporting_clean.db-> SELECT 
+  DISTINCT metric_name 
+FROM metrics 
+ORDER BY metric_name;
+╭─────────────────────────────╮
+│         metric_name         │
+╞═════════════════════════════╡
+│ download_attempts_count     │
+│ download_rtt_ms             │
+│ download_throughput_bytes_s │
+│ download_ttfb_ms            │
+│ upload_attempts_count       │
+│ upload_failures_count       │
+│ upload_rtt_ms               │
+│ upload_throughput_bytes_s   │
+╰─────────────────────────────╯
+```
+
+When I started this benchmarking pursuit, I didn't expect to get these wacky results. I swear everytime I profile performance I'm surprised in one way or another.
+
+This took a lot of time to organize, compile the data, and more importantly demonstrate in a digestible format. I'm out of words haha. 
+
+I'm happy to discuss this in hackernews, bluesky, reddit, oldreddit (links incoming once I post this).
