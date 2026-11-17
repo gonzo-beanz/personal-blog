@@ -1,0 +1,51 @@
+<div class="s3-benchmark-tabs">
+    <div class="s3-benchmark-tab-list" role="tablist" aria-label="S3 bucket results"></div>
+    <div class="s3-benchmark-tab-panels">
+        {{ .Inner | safeHTML }}
+    </div>
+</div>
+<script>
+(() => {
+    const tabsets = document.querySelectorAll('.s3-benchmark-tabs');
+    let tabsetCounter = 0;
+    tabsets.forEach(tabset => {
+        if (tabset.dataset.tabsInitialized) return;
+        tabset.dataset.tabsInitialized = 'true';
+        const tabsetId = tabset.id || `s3-tabs-${tabsetCounter++}`;
+        const tabList = tabset.querySelector('.s3-benchmark-tab-list');
+        const panels = [...tabset.querySelectorAll(':scope > .s3-benchmark-tab-panels > [data-title]')];
+        if (!tabList || panels.length === 0) return;
+
+        const activate = index => {
+            panels.forEach((panel, panelIndex) => {
+                const active = panelIndex === index;
+                panel.hidden = !active;
+                const tab = tabList.children[panelIndex];
+                tab.setAttribute('aria-selected', active ? 'true' : 'false');
+                tab.tabIndex = active ? 0 : -1;
+            });
+        };
+
+        panels.forEach((panel, index) => {
+            const tab = document.createElement('button');
+            tab.type = 'button';
+            tab.className = 's3-benchmark-tab';
+            tab.setAttribute('role', 'tab');
+            tab.setAttribute('aria-controls', `${tabsetId}-panel-${index}`);
+            tab.textContent = panel.dataset.title;
+            panel.id = `${tabsetId}-panel-${index}`;
+            tab.addEventListener('click', () => activate(index));
+            tab.addEventListener('keydown', event => {
+                if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+                event.preventDefault();
+                const next = (index + (event.key === 'ArrowRight' ? 1 : panels.length - 1)) % panels.length;
+                tabList.children[next].focus();
+                activate(next);
+            });
+            tabList.appendChild(tab);
+        });
+
+        activate(0);
+    });
+})();
+</script>

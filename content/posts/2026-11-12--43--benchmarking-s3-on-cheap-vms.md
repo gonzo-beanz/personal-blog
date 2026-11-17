@@ -20,9 +20,9 @@ Let's find out!
 | DigitalOcean Spaces | $20                 | $10                | Minimum price is $5.<br/>Includes 250GB of storage and 1TB of egress |
 | Amazon S3           | $23                 | $90                | This is the king. Long live the king.                                |
 
-All providers offer free ingress (data into S3). They have to lock you into the platform somehow.
+All providers offer free ingress (data into S3). This is how they lock you into the platform!
 
-First observation is that Backblaze stands out as a great deal compared to the rest both in storage and egress.
+First observation is that Backblaze stands out as a great deal both in terms of storage and egress.
 
 In general, the biggest difference in pricing from Amazon is egress (data out of S3). The egress pricing for Amazon is bananas. You have to commit to sending your data to Amazon because it costs so much to get the data out.
 
@@ -40,7 +40,7 @@ There's many other providers but I don't have infinite time. Reach out to me if 
 
 I setup two buckets in each of the S3 providers: one in the US east region and one in the US west region.
 
-I then spun up one VM host for each host provider in the US east region. This allows us to test if a higher RTT affects throughput.
+I then spun up one VM host for each hosting provider in the US east region. This allows us to test if a higher RTT affects throughput.
 
 For each of the VM hosts, I upload and then download files of different sizes:
 - 100 kilobytes
@@ -66,19 +66,21 @@ I have a couple of hunches.
 
 ### 1. Cheaper S3 hosts will have less consistent throughput
 
-Because of the way S3 is designed, it's more stable at large scales. There's a neat phenomenon where each tenant's different bursty usage patterns smooth out into the average (see [AWS re:Invent 2024 - Dive deep on Amazon S3 @ 13:16](https://youtu.be/NXehLy7IiPM?si=gTN5ZVIBASF12maf&t=796)).
+Because of the way S3 is designed, it's more stable at larger scales. There's a neat phenomenon where each tenant's different bursty usage patterns smooth out into the average (see [AWS re:Invent 2024 - Dive deep on Amazon S3 @ 13:16](https://youtu.be/NXehLy7IiPM?si=gTN5ZVIBASF12maf&t=796)).
 
 I'm assuming that Amazon is by far the biggest provider even including GCP and Azure. They should have the most stable throughput given all the "extra" capacity they have at their scale.
 
-### 2. Throughput is dependent on distance to the S3
+### 2. Throughput is dependent on distance to the S3 provider
 
-The closer you are to the service the more throughput. S3 works over HTTP which works over TCP. TCP has a simple formula for maximum throughput:
+The closer you are to the service the more throughput. S3 works over HTTP which works over TCP. 
+
+TCP has a simple formula for maximum throughput:
 
 ```
 Window Size / Round Trip Time (RTT)
 ```
 
-Where window size is smaller of the advertised receive window and sender congestion window (in bytes). Roundtrip time negatively affects the throughput. Linux hosts usually have a window size of 8 megabytes according to https://www.openpcap.com/tcp/tcp-window-scaling.
+Where window size is smaller of the advertised receive window and sender congestion window (in bytes). **Roundtrip time negatively affects the throughput**. Linux hosts usually have a window size of 8 megabytes according to https://www.openpcap.com/tcp/tcp-window-scaling.
 
 So if we compare 50 ms vs 500ms:
 
@@ -97,9 +99,11 @@ If the file is smaller and the S3 service is far away (high RTT) then the TCP co
 
 # Summary
 
-For context, here is the latency table for each host to S3 bucket in milliseconds. RTT from the host to the S3 service.
+For context, here is the latency table for each host to S3 bucket. The values are RTT in milliseconds from the host to the S3 service.
 
 {{< s3-benchmark-rtt-table >}}
+
+The only one that's strange is R2 East. It's almost the same RTT as the west region!
 
 ## East <--> East
 
@@ -142,6 +146,57 @@ The AWS EC2 machine I chose is c6a.large. It features
 
 This is the one to beat! I chose this one over the similar t3a.medium instance since the `t` instances have bursty CPUs and I was worried the burstiness might affect the benchmark timings. Also it seems like a fairer comparison to other VMs, even if those other VMs offer "shared" vCPUs instead of dedicated vCPUs. This is yet another variable that's hard to control since it's unclear how much of vCPU you are provisioned in ANY cloud/provider.
 
+{{< s3-benchmark-tabs >}}
+<div data-title="AWS East">
+{{< s3-benchmark-rtt host="aws-us-east-1" provider="aws-east-1" title="AWS East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="aws-us-east-1" provider="aws-east-1" metric="upload_throughput_bytes_s" title="AWS East - Upload" max_y="3500" >}}{{< s3-benchmark-chart host="aws-us-east-1" provider="aws-east-1" metric="download_throughput_bytes_s" title="AWS East - Download" max_y="3500" >}}
+</div>
+</div>
+<div data-title="AWS West">
+{{< s3-benchmark-rtt host="aws-us-east-1" provider="aws-west-1" title="AWS West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="aws-us-east-1" provider="aws-west-1" metric="upload_throughput_bytes_s" title="AWS West - Upload" max_y="1500" >}}{{< s3-benchmark-chart host="aws-us-east-1" provider="aws-west-1" metric="download_throughput_bytes_s" title="AWS West - Download" max_y="1500" >}}
+</div>
+</div>
+<div data-title="B2 East">
+{{< s3-benchmark-rtt host="aws-us-east-1" provider="b2-east" title="B2 East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="aws-us-east-1" provider="b2-east" metric="upload_throughput_bytes_s" title="B2 East - Upload" max_y="5000" >}}{{< s3-benchmark-chart host="aws-us-east-1" provider="b2-east" metric="download_throughput_bytes_s" title="B2 East - Download" max_y="5000" >}}
+</div>
+</div>
+<div data-title="B2 West">
+{{< s3-benchmark-rtt host="aws-us-east-1" provider="b2-west" title="B2 West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="aws-us-east-1" provider="b2-west" metric="upload_throughput_bytes_s" title="B2 West - Upload" max_y="800" >}}{{< s3-benchmark-chart host="aws-us-east-1" provider="b2-west" metric="download_throughput_bytes_s" title="B2 West - Download" max_y="800" >}}
+</div>
+</div>
+<div data-title="DO Spaces East">
+{{< s3-benchmark-rtt host="aws-us-east-1" provider="do-east-nyc3" title="DO Spaces East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="aws-us-east-1" provider="do-east-nyc3" metric="upload_throughput_bytes_s" title="DO Spaces East - Upload" max_y="6500" >}}{{< s3-benchmark-chart host="aws-us-east-1" provider="do-east-nyc3" metric="download_throughput_bytes_s" title="DO Spaces East - Download" max_y="6500" >}}
+</div>
+</div>
+<div data-title="DO Spaces West">
+{{< s3-benchmark-rtt host="aws-us-east-1" provider="do-west-sfo3" title="DO Spaces West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="aws-us-east-1" provider="do-west-sfo3" metric="upload_throughput_bytes_s" title="DO Spaces West - Upload" max_y="2000" >}}{{< s3-benchmark-chart host="aws-us-east-1" provider="do-west-sfo3" metric="download_throughput_bytes_s" title="DO Spaces West - Download" max_y="2000" >}}
+</div>
+</div>
+<div data-title="R2 East">
+{{< s3-benchmark-rtt host="aws-us-east-1" provider="r2-east" title="R2 East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="aws-us-east-1" provider="r2-east" metric="upload_throughput_bytes_s" title="R2 East - Upload" max_y="1800" >}}{{< s3-benchmark-chart host="aws-us-east-1" provider="r2-east" metric="download_throughput_bytes_s" title="R2 East - Download" max_y="1800" >}}
+</div>
+</div>
+<div data-title="R2 West">
+{{< s3-benchmark-rtt host="aws-us-east-1" provider="r2-west" title="R2 West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="aws-us-east-1" provider="r2-west" metric="upload_throughput_bytes_s" title="R2 West - Upload" max_y="1800" >}}{{< s3-benchmark-chart host="aws-us-east-1" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="1800" >}}
+</div>
+</div>
+{{< /s3-benchmark-tabs >}}
+
 ## Contabo ($7.51 / mo)
 
 First up is the cheapest and (unsurprisingly) worst performer! The price displayed is after a 12 month commitment.
@@ -157,37 +212,64 @@ It seemed like a bonkers deal and I slighty regret it because the disk is not an
 
 The biggest limitation is the 200 Mbps. It's less than what I get at home!
 
-### Backblaze B2
-
+{{< s3-benchmark-tabs >}}
+<div data-title="AWS East">
+{{< s3-benchmark-rtt host="contabo" provider="aws-east-1" title="AWS East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="contabo" provider="aws-east-1" metric="upload_throughput_bytes_s" title="AWS East - Upload" max_y="210" >}}
+{{< s3-benchmark-chart host="contabo" provider="aws-east-1" metric="download_throughput_bytes_s" title="AWS East - Download" max_y="210" >}}
+</div>
+</div>
+<div data-title="AWS West">
+{{< s3-benchmark-rtt host="contabo" provider="aws-west-1" title="AWS West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="contabo" provider="aws-west-1" metric="upload_throughput_bytes_s" title="AWS West - Upload" max_y="210" >}}
+{{< s3-benchmark-chart host="contabo" provider="aws-west-1" metric="download_throughput_bytes_s" title="AWS West - Download" max_y="210" >}}
+</div>
+</div>
+<div data-title="B2 East">
 {{< s3-benchmark-rtt host="contabo" provider="b2-east" title="B2 East" >}}
-
 <div class="s3-benchmark-chart-row">
 {{< s3-benchmark-chart host="contabo" provider="b2-east" metric="upload_throughput_bytes_s" title="B2 East - Upload" max_y="210" >}}
 {{< s3-benchmark-chart host="contabo" provider="b2-east" metric="download_throughput_bytes_s" title="B2 East - Download" max_y="210" >}}
 </div>
-
+</div>
+<div data-title="B2 West">
 {{< s3-benchmark-rtt host="contabo" provider="b2-west" title="B2 West" >}}
-
 <div class="s3-benchmark-chart-row">
 {{< s3-benchmark-chart host="contabo" provider="b2-west" metric="upload_throughput_bytes_s" title="B2 West - Upload" max_y="210" >}}
 {{< s3-benchmark-chart host="contabo" provider="b2-west" metric="download_throughput_bytes_s" title="B2 West - Download" max_y="210" >}}
 </div>
-
-### Cloudflare R2
-
+</div>
+<div data-title="DO Spaces East">
+{{< s3-benchmark-rtt host="contabo" provider="do-east-nyc3" title="DO Spaces East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="contabo" provider="do-east-nyc3" metric="upload_throughput_bytes_s" title="DO Spaces East - Upload" max_y="320" >}}
+{{< s3-benchmark-chart host="contabo" provider="do-east-nyc3" metric="download_throughput_bytes_s" title="DO Spaces East - Download" max_y="320" >}}
+</div>
+</div>
+<div data-title="DO Spaces West">
+{{< s3-benchmark-rtt host="contabo" provider="do-west-sfo3" title="DO Spaces West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="contabo" provider="do-west-sfo3" metric="upload_throughput_bytes_s" title="DO Spaces West - Upload" max_y="220" >}}
+{{< s3-benchmark-chart host="contabo" provider="do-west-sfo3" metric="download_throughput_bytes_s" title="DO Spaces West - Download" max_y="220" >}}
+</div>
+</div>
+<div data-title="R2 East">
 {{< s3-benchmark-rtt host="contabo" provider="r2-east" title="R2 East" >}}
-
 <div class="s3-benchmark-chart-row">
 {{< s3-benchmark-chart host="contabo" provider="r2-east" metric="upload_throughput_bytes_s" title="R2 East - Upload" max_y="210" >}}
 {{< s3-benchmark-chart host="contabo" provider="r2-east" metric="download_throughput_bytes_s" title="R2 East - Download" max_y="210" >}}
 </div>
-
+</div>
+<div data-title="R2 West">
 {{< s3-benchmark-rtt host="contabo" provider="r2-west" title="R2 West" >}}
-
 <div class="s3-benchmark-chart-row">
 {{< s3-benchmark-chart host="contabo" provider="r2-west" metric="upload_throughput_bytes_s" title="R2 West - Upload" max_y="210" >}}
 {{< s3-benchmark-chart host="contabo" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="210" >}}
 </div>
+</div>
+{{< /s3-benchmark-tabs >}}
 
 ## DigitalOcean ($24 / mo)
 
@@ -200,41 +282,68 @@ The Digital Ocean Droplet used the NYC3 region to give it the best home field ad
 
 Notably this one offer 1 Gbps. This machine feels way snappier than the Contabo VPS.
 
-### Backblaze B2
-
+{{< s3-benchmark-tabs >}}
+<div data-title="AWS East">
+{{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="aws-east-1" title="AWS East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="aws-east-1" metric="upload_throughput_bytes_s" title="AWS East - Upload" max_y="2200" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="aws-east-1" metric="download_throughput_bytes_s" title="AWS East - Download" max_y="2200" >}}
+</div>
+</div>
+<div data-title="AWS West">
+{{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="aws-west-1" title="AWS West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="aws-west-1" metric="upload_throughput_bytes_s" title="AWS West - Upload" max_y="900" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="aws-west-1" metric="download_throughput_bytes_s" title="AWS West - Download" max_y="900" >}}
+</div>
+</div>
+<div data-title="B2 East">
 {{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="b2-east" title="B2 East" >}}
-
 <div class="s3-benchmark-chart-row">
 {{< s3-benchmark-chart host="digital-ocean-nyc3" provider="b2-east" metric="upload_throughput_bytes_s" title="B2 East - Upload" max_y="3000" >}}
 {{< s3-benchmark-chart host="digital-ocean-nyc3" provider="b2-east" metric="download_throughput_bytes_s" title="B2 East - Download" max_y="3000" >}}
 </div>
-
+</div>
+<div data-title="B2 West">
 {{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="b2-west" title="B2 West" >}}
-
 <div class="s3-benchmark-chart-row">
 {{< s3-benchmark-chart host="digital-ocean-nyc3" provider="b2-west" metric="upload_throughput_bytes_s" title="B2 West - Upload" max_y="1000" >}}
 {{< s3-benchmark-chart host="digital-ocean-nyc3" provider="b2-west" metric="download_throughput_bytes_s" title="B2 West - Download" max_y="1000" >}}
 </div>
-
-### Cloudflare R2
-
+</div>
+<div data-title="DO Spaces East">
+{{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="do-east-nyc3" title="DO Spaces East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="do-east-nyc3" metric="upload_throughput_bytes_s" title="DO Spaces East - Upload" max_y="3200" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="do-east-nyc3" metric="download_throughput_bytes_s" title="DO Spaces East - Download" max_y="3200" >}}
+</div>
+</div>
+<div data-title="DO Spaces West">
+{{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="do-west-sfo3" title="DO Spaces West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="do-west-sfo3" metric="upload_throughput_bytes_s" title="DO Spaces West - Upload" max_y="1500" >}}
+{{< s3-benchmark-chart host="digital-ocean-nyc3" provider="do-west-sfo3" metric="download_throughput_bytes_s" title="DO Spaces West - Download" max_y="1500" >}}
+</div>
+</div>
+<div data-title="R2 East">
 {{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="r2-east" title="R2 East" >}}
-
 <div class="s3-benchmark-chart-row">
 {{< s3-benchmark-chart host="digital-ocean-nyc3" provider="r2-east" metric="upload_throughput_bytes_s" title="R2 East - Upload" max_y="2000" >}}
 {{< s3-benchmark-chart host="digital-ocean-nyc3" provider="r2-east" metric="download_throughput_bytes_s" title="R2 East - Download" max_y="2000" >}}
 </div>
-
+</div>
+<div data-title="R2 West">
 {{< s3-benchmark-rtt host="digital-ocean-nyc3" provider="r2-west" title="R2 West" >}}
-
 <div class="s3-benchmark-chart-row">
 {{< s3-benchmark-chart host="digital-ocean-nyc3" provider="r2-west" metric="upload_throughput_bytes_s" title="R2 West - Upload" max_y="2000" >}}
 {{< s3-benchmark-chart host="digital-ocean-nyc3" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="2000" >}}
 </div>
+</div>
+{{< /s3-benchmark-tabs >}}
 
 ## Hetzner (€17.49 | ~$19.28 / mo)
 
-The Hetzner VM used the ash-1 region. This should be really close to the AWS S3 east region, so we should see some great performance there. The specs:
+The Hetzner VM used the ash-1 region. I thought this would be really close to the AWS S3 east region and it was! Mean RTT was 5.7 milliseconds! The specs:
 
 - 2 vCPU (shared)
 - 4 GB RAM
@@ -242,3 +351,61 @@ The Hetzner VM used the ash-1 region. This should be really close to the AWS S3 
 - 1 Gbps
 
 This feels a little snappier than the Digital Ocean Droplet. I've used Hetzner for a long time up until they hit me with 2 price increases in 6 months. During that time, I was very satisfied with the CPU and disk performance.
+
+{{< s3-benchmark-tabs >}}
+<div data-title="AWS East">
+{{< s3-benchmark-rtt host="hetzner-ash-1" provider="aws-east-1" title="AWS East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="hetzner-ash-1" provider="aws-east-1" metric="upload_throughput_bytes_s" title="AWS East - Upload" max_y="3500" >}}{{< s3-benchmark-chart host="hetzner-ash-1" provider="aws-east-1" metric="download_throughput_bytes_s" title="AWS East - Download" max_y="3500" >}}
+</div>
+</div>
+<div data-title="AWS West">
+{{< s3-benchmark-rtt host="hetzner-ash-1" provider="aws-west-1" title="AWS West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="hetzner-ash-1" provider="aws-west-1" metric="upload_throughput_bytes_s" title="AWS West - Upload" max_y="1500" >}}{{< s3-benchmark-chart host="hetzner-ash-1" provider="aws-west-1" metric="download_throughput_bytes_s" title="AWS West - Download" max_y="1500" >}}
+</div>
+</div>
+<div data-title="B2 East">
+{{< s3-benchmark-rtt host="hetzner-ash-1" provider="b2-east" title="B2 East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="hetzner-ash-1" provider="b2-east" metric="upload_throughput_bytes_s" title="B2 East - Upload" max_y="5000" >}}{{< s3-benchmark-chart host="hetzner-ash-1" provider="b2-east" metric="download_throughput_bytes_s" title="B2 East - Download" max_y="5000" >}}
+</div>
+</div>
+<div data-title="B2 West">
+{{< s3-benchmark-rtt host="hetzner-ash-1" provider="b2-west" title="B2 West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="hetzner-ash-1" provider="b2-west" metric="upload_throughput_bytes_s" title="B2 West - Upload" max_y="800" >}}{{< s3-benchmark-chart host="hetzner-ash-1" provider="b2-west" metric="download_throughput_bytes_s" title="B2 West - Download" max_y="800" >}}
+</div>
+</div>
+<div data-title="DO Spaces East">
+{{< s3-benchmark-rtt host="hetzner-ash-1" provider="do-east-nyc3" title="DO Spaces East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="hetzner-ash-1" provider="do-east-nyc3" metric="upload_throughput_bytes_s" title="DO Spaces East - Upload" max_y="6500" >}}{{< s3-benchmark-chart host="hetzner-ash-1" provider="do-east-nyc3" metric="download_throughput_bytes_s" title="DO Spaces East - Download" max_y="6500" >}}
+</div>
+</div>
+<div data-title="DO Spaces West">
+{{< s3-benchmark-rtt host="hetzner-ash-1" provider="do-west-sfo3" title="DO Spaces West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="hetzner-ash-1" provider="do-west-sfo3" metric="upload_throughput_bytes_s" title="DO Spaces West - Upload" max_y="2000" >}}{{< s3-benchmark-chart host="hetzner-ash-1" provider="do-west-sfo3" metric="download_throughput_bytes_s" title="DO Spaces West - Download" max_y="2000" >}}
+</div>
+</div>
+<div data-title="R2 East">
+{{< s3-benchmark-rtt host="hetzner-ash-1" provider="r2-east" title="R2 East" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="hetzner-ash-1" provider="r2-east" metric="upload_throughput_bytes_s" title="R2 East - Upload" max_y="1800" >}}{{< s3-benchmark-chart host="hetzner-ash-1" provider="r2-east" metric="download_throughput_bytes_s" title="R2 East - Download" max_y="1800" >}}
+</div>
+</div>
+<div data-title="R2 West">
+{{< s3-benchmark-rtt host="hetzner-ash-1" provider="r2-west" title="R2 West" >}}
+<div class="s3-benchmark-chart-row">
+{{< s3-benchmark-chart host="hetzner-ash-1" provider="r2-west" metric="upload_throughput_bytes_s" title="R2 West - Upload" max_y="1800" >}}{{< s3-benchmark-chart host="hetzner-ash-1" provider="r2-west" metric="download_throughput_bytes_s" title="R2 West - Download" max_y="1800" >}}
+</div>
+</div>
+{{< /s3-benchmark-tabs >}}
+
+
+## Closing thoughts
+
+When I started this benchmarking pursuit, I didn't expect to get these wacky results.
+
+You can [download the cleaned benchmark database](/downloads/s3-benchmark-reporting.db.gz) (SQLite, gzip-compressed).
