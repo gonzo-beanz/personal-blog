@@ -1,6 +1,6 @@
 ---
 date: "2026-11-12T00:00:00-00:00"
-title: "Benchmarking S3 alternatives on cheap VMs vs S3 on EC2"
+title: "Benchmarking S3 alternatives: How do cheap VMs compare to S3 on EC2"
 url: /blog/43
 ---
 
@@ -58,7 +58,7 @@ I stand up each VM host as close as possible to AWS's `us-east-1`. I'm assuming 
 
 ![US East Coast Data Center Map pointing to AWS us-east-1 rough location](/img/posts/43/us-east-coast-data-center-map.png)
 
-Finally before each operation, I do a [HeadBucket](https://docs.aws.amazon.com/AmazonS3/latest/API/API_HeadBucket.html) request to measure the Round Trip Time (RTT). This is because some providers blocked ICMP pings to their endpoints 🤷.
+Finally before each operation, I do a [HeadBucket](https://docs.aws.amazon.com/AmazonS3/latest/API/API_HeadBucket.html) request to measure the Round Trip Time (RTT). Why this instead of just a plain old ICMP ping? Because some providers blocked the poings 🤷.
 
 # Hypotheses
 
@@ -68,7 +68,7 @@ I have a couple of hunches.
 
 Because of the way S3 is designed, it's more stable at larger scales. There's a neat phenomenon where each tenant's different bursty usage patterns smooth out into the average (see [AWS re:Invent 2024 - Dive deep on Amazon S3 @ 13:16](https://youtu.be/NXehLy7IiPM?si=gTN5ZVIBASF12maf&t=796)).
 
-I'm assuming that Amazon is by far the biggest provider even including GCP and Azure. They should have the most stable throughput given all the "extra" capacity they have at their scale.
+I'm assuming that Amazon is by far the biggest provider even including GCP and Azure. Amazon should have the most stable throughput given all the "extra" capacity they have at their scale.
 
 ### 2. Throughput is dependent on distance to the S3 provider
 
@@ -99,7 +99,7 @@ If the file is smaller and the S3 service is far away (high RTT) then the TCP co
 
 # Summary
 
-For context, here is the latency table for each host and each S3 provider. 
+For context, here is the latency table for each host and each S3 provider. Each value is the **mean RTT** from the host to the S3 bucket.
 
 As an example, I've marked first column, third row in red below.
 
@@ -119,11 +119,11 @@ First of all, the Contabo host has it's bandwidth capped at 200 Mbits / s. Poor 
 
 My first impression is that my first hypotheses was correct. S3 is way more consistent than the other providers. Look at that tiny standard deviation! 
 
-On the other hand, I never would have bet that Backblaze and DigitalOcean can beat S3 in throughput IN THEIR OWN DATACENTERS. As far as I know, they both have their own data centers and don't colocate within Amazon. Maybe they do? They at least must have dedicated fiber connections to AWS to achieve this performance. So interesting. 
+My second assumption also seems correct. **R2 East** has the worst latency of the east buckets and has the worst throughput. The digital ocean facilty seems to be the closest (mean RTT of 48.2 ms) and this one ends up being the fastest with R2 East!
+
+Lastly, I never would have bet that Backblaze and DigitalOcean can beat S3 in throughput IN THEIR OWN DATACENTERS. As far as I know, they both have their own data centers and don't colocate within Amazon. Maybe they do? They at least must have dedicated fiber connections to AWS to achieve this performance. So interesting. 
 
 This makes these S3 alternatives way more appealing. Specially DigitalOcean! They have really consistent performance.
-
-The second assumption seems to hold as well if we take a look at Cloudflare R2's performance. The RTT is much higher than it's east coast peers and the speed suffers.
 
 ## East <--> West
 
@@ -141,14 +141,14 @@ This took quite a while to measure and compile. Please enjoy the colorful graphs
 
 ## AWS ($55.84 / mo + $1.60 / mo storage)
 
-The AWS EC2 machine I chose is c6a.large. It features
+The AWS EC2 machine I chose is **c6a.large**. It features
 
 - 2 vCPU
 - 4 GB RAM
 - 20 GB Elastic Block Storage (EBS)
 - "Up to 5 Gbps"
 
-This is the one to beat! I chose this one over the similar t3a.medium instance since the `t` instances have bursty CPUs and I was worried the burstiness might affect the benchmark timings. Also it seems like a fairer comparison to other VMs, even if those other VMs offer "shared" vCPUs instead of dedicated vCPUs. This is yet another variable that's hard to control since it's unclear how much of vCPU you are provisioned in ANY cloud/provider.
+I chose this one over the similar t3a.medium instance since the `t` instances have bursty CPUs and I was worried the burstiness might affect the benchmark timings. Also it seems like a fairer comparison to other VMs, even if those other VMs offer "shared" vCPUs instead of dedicated vCPUs. This is yet another variable that's hard to control since it's unclear how much of vCPU you are provisioned in ANY cloud/provider.
 
 {{< s3-benchmark-tabs >}}
 <div data-title="AWS East">
@@ -203,9 +203,9 @@ This is the one to beat! I chose this one over the similar t3a.medium instance s
 
 ## Contabo ($7.51 / mo)
 
-First up is the cheapest and (unsurprisingly) worst performer! The price displayed is after a 12 month commitment.
+The cheapest and (unsurprisingly) worst performer! The price displayed is after a 12 month commitment.
 
-This is a Cloud VPS 4 Core server. It features
+This is a **Cloud VPS 4 Core** server. It features
 
 - 4 vCPU (shared)
 - 8 GB RAM
@@ -347,14 +347,14 @@ Notably this one offer 1 Gbps. This machine feels way snappier than the Contabo 
 
 ## Hetzner (€17.49 | ~$19.28 / mo)
 
-The Hetzner VM used the ash-1 region. I thought this would be really close to the AWS S3 east region and it was! Mean RTT was 5.7 milliseconds! The specs:
+The Hetzner VM used the ash-1 region. I thought this would be really close to the AWS S3 east region and it was! Mean RTT was 5.7 ms! The specs:
 
 - 2 vCPU (shared)
 - 4 GB RAM
 - 80 GB SSD
 - 1 Gbps
 
-This feels a little snappier than the Digital Ocean Droplet. I've used Hetzner for a long time up until they hit me with 2 price increases in 6 months. During that time, I was very satisfied with the CPU and disk performance.
+This feels a little snappier than the Digital Ocean Droplet. I've used Hetzner for a long time up until they hit me with 2 price increases in 6 months. Up until that moment, I was very satisfied with the CPU and disk performance.
 
 {{< s3-benchmark-tabs >}}
 <div data-title="AWS East">
@@ -463,4 +463,4 @@ When I started this benchmarking pursuit, I didn't expect to get these wacky res
 
 This took a lot of time to organize, compile the data, and more importantly demonstrate in a digestible format. I'm out of words haha. 
 
-I'm happy to discuss this in hackernews, bluesky, reddit, oldreddit (links incoming once I post this).
+I'm happy to discuss this in [hackernews](https://news.ycombinator.com/item?id=50546325), [bluesky](https://bsky.app/profile/gonzobea.nz/post/3n2lpp4jrqc2d), [reddit](https://www.reddit.com/r/programming/comments/1xzfsjo/benchmarking_s3_alternatives_how_do_cheap_vms/), [oldreddit](https://old.reddit.com/r/programming/comments/1xzfsjo/benchmarking_s3_alternatives_how_do_cheap_vms/?ref=share&ref_source=link).
